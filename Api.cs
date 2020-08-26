@@ -25,7 +25,7 @@ namespace DotNet
 
             var response = await _client.PostAsync("new", data);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -41,7 +41,7 @@ namespace DotNet
         {
             var response = await _client.GetAsync("start?GameId=" + gameId);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -59,7 +59,7 @@ namespace DotNet
 
             var response = await _client.PostAsync("action/startBuild?GameId=" + gameId, data);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -76,11 +76,11 @@ namespace DotNet
             var data = new StringContent(pos, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("action/Build?GameId=" + gameId, data);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
-                Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
                 Console.WriteLine("Fatal Error: could not build");
                 Environment.Exit(1);
             }
@@ -93,7 +93,7 @@ namespace DotNet
             var data = new StringContent(pos, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("action/Demolish?GameId=" + gameId, data);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -110,7 +110,7 @@ namespace DotNet
             var data = new StringContent(pos, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("action/Maintenance?GameId=" + gameId, data);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -127,7 +127,7 @@ namespace DotNet
             var data = new StringContent(body, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("action/BuyUpgrade?GameId=" + gameId, data);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -144,7 +144,7 @@ namespace DotNet
             var data = new StringContent(body, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("action/AdjustEnergy?GameId=" + gameId, data);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -162,7 +162,7 @@ namespace DotNet
             var data = new StringContent("", Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("action/Wait?GameId=" + gameId, data);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -174,20 +174,20 @@ namespace DotNet
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
         }
 
-        public async Task<string> GetScore(string gameId)
+        public async Task<ScoreResponse> GetScore(string gameId)
         {
             //Client.DefaultRequestHeaders.Add("x-api-key", apiKey);
             var response = await _client.GetAsync("score?GameId?" + gameId);
 
-            var result = response.Content.ReadAsStringAsync().Result;
-            return (result);
+            var result = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ScoreResponse>(result);
         }
 
         public async Task<GameState> GetGameInfo(string gameId)
         {
             var response = await _client.GetAsync("gameInfo?GameId?" + gameId);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -203,7 +203,7 @@ namespace DotNet
         {
             var response = await _client.GetAsync("gameState?GameId?" + gameId);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -219,7 +219,7 @@ namespace DotNet
         {
             var response = await _client.GetAsync("games");
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
@@ -234,12 +234,12 @@ namespace DotNet
         public async Task EndGame(string gameId = null)
         {
             var response = await _client.GetAsync("end?GameId?" + gameId);
-            Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+            Console.WriteLine(await response.Content.ReadAsStringAsync());
 
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
                 Console.WriteLine("Fatal Error: could not end game");
                 Environment.Exit(1);
             }

@@ -111,7 +111,7 @@ namespace DotNet
 
         /// <summary> Gets the score for the specified game.</summary>
         ///
-        public string GetScore(string gameId)
+        public ScoreResponse GetScore(string gameId)
         {
             var response = _api.GetScore(gameId);
             return response.Result;

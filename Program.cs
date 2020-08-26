@@ -23,7 +23,7 @@ namespace DotNet
                 take_turn(gameId);
             }
             Console.WriteLine($"Done with game: {GameLayer.GetState().GameId}");
-            Console.WriteLine(GameLayer.GetScore(gameId));
+            Console.WriteLine(GameLayer.GetScore(gameId).FinalScore);
         }
 
         private static void take_turn(string gameId)
