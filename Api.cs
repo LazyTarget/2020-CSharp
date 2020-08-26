@@ -42,7 +42,6 @@ namespace DotNet
             var response = await _client.GetAsync("start?GameId=" + gameId);
 
             var result = response.Content.ReadAsStringAsync().Result;
-            Console.WriteLine(result);
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 Console.WriteLine("Exception:" + result);
