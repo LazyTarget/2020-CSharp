@@ -52,9 +52,10 @@ namespace DotNet
                 GameLayer.StartBuild(new Position(x, y), state.AvailableResidenceBuildings[0].BuildingName,
                     gameId);
             }
-
             else
             {
+                GameLayer.RandomizeAction();
+
                 var building = state.ResidenceBuildings[0];
                 if (building.BuildProgress < 100)
                 {
