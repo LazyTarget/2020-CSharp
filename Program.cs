@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using DotNet.models;
 
@@ -49,6 +50,9 @@ namespace DotNet
             var randomizer = new Randomizer(GameLayer);
             while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
             {
+                var state = GameLayer.GetState();
+                PrintDebug_NewTurn(state);
+
                 randomizer.HandleTurn();
 
                 //take_turn(gameId);
@@ -139,6 +143,20 @@ namespace DotNet
                     Console.WriteLine("Error: " + error);
                 }
             }
+        }
+
+        private static void PrintDebug_NewTurn(GameState state)
+        {
+            var currentPop = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>().Sum(x => x.CurrentPop);
+
+            var currentPopMax = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>()
+                .Join(state.AvailableResidenceBuildings, ok => ok.BuildingName, ik => ik.BuildingName,
+                    (rb, bp) => new { bp, rb })
+                .Sum(x => x.bp.MaxPop);
+
+            var currentPopPercentage = currentPop / (double)currentPopMax;
+
+            Debug.WriteLine($"Begin New Turn :: Turn={state.Turn}, Funds={state.Funds}, Temp={state.CurrentTemp}, Pop: {currentPop}/{currentPopMax} ({currentPopPercentage:P2})");
         }
     }
 }
