@@ -58,6 +58,7 @@ namespace DotNet
         public List<Effect> Effects { get; set; }
 
         public List<Upgrade> AvailableUpgrades { get; set; }
+        public IDictionary<int, double> TemperatureHistory { get; set; }
 
 
         public void UpdateState(GameStateResponse state)
@@ -73,6 +74,9 @@ namespace DotNet
             TotalCo2 = state.TotalCo2;
             TotalHappiness = state.TotalHappiness;
             UtilityBuildings = state.UtilityBuildings;
+
+            TemperatureHistory ??= new Dictionary<int, double>();
+            TemperatureHistory[state.Turn] = state.CurrentTemp;
         }
 
         public override string ToString()
