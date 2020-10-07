@@ -20,7 +20,7 @@ namespace DotNet
 
 		public void HandleTurn(int turn)
 		{
-			if (turn < 5)
+			if (turn < 3)
 			{
 				// Prioritize on building in the beginning...
 				HandleAction(GameActions.StartBuild);
@@ -55,7 +55,7 @@ namespace DotNet
 					break;
 
 				case GameActions.Maintenance:
-					var damagedBuildings = _gameState.ResidenceBuildings.Where(x => x.Health < 45).ToArray();
+					var damagedBuildings = _gameState.ResidenceBuildings.Where(x => x.Health < 50).ToArray();
 					var damagedBuilding = damagedBuildings.ElementAt(_random.Next(0, damagedBuildings.Length));
 					position = damagedBuilding.Position;
 					break;

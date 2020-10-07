@@ -68,15 +68,28 @@ namespace DotNet
 			var state = gameLayer.GetState();
 
 			// If has money availble for a building, then can start building
-			if (state.GetBuildingBlueprints().Any(x => x.Cost <= state.Funds))
-				yield return GameActions.StartBuild;
+			var blueprints = state.GetBuildingBlueprints().ToArray();
+			if (blueprints.Any(x => x.Cost <= state.Funds))
+			{
+				// Only build if will have plenty of money left...
+
+				var fraction = state.Funds / blueprints.OrderByDescending(x => x.Cost).First().Cost;
+				if (fraction >= 3)
+				{
+					yield return GameActions.StartBuild;
+				}
+				else
+				{
+
+				}
+			}
 
 			// If has non-completed buildings, then can build
 			if (state.GetBuildingsUnderConstruction().Any(x => x.BuildProgress < 100))
 				yield return GameActions.Build;
 
 			// If has completed buildings and they are low on hp, then can do maintenance
-			var damagedBuildings = state.ResidenceBuildings.Where(x => x.Health < 45).ToArray();
+			var damagedBuildings = state.ResidenceBuildings.Where(x => x.Health < 50).ToArray();
 			if (damagedBuildings.Any())
 			{
 				var buildingTypes = damagedBuildings.Select(x => x.BuildingName).Distinct().ToArray();
