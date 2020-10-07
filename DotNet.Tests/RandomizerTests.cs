@@ -36,13 +36,19 @@ namespace DotNet.Tests
 		[TestMethod]
 		public void Default_Apartments()
 		{
+			var buildingName = "Apartments";
+
 			TurnStrategyBase strategy = null;
+			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
+			{
+				BuildingName = buildingName,
+			};
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = "Apartments",
+				BuildingName = buildingName,
 			};
 
 			var runner = InitRunner();
@@ -53,13 +59,19 @@ namespace DotNet.Tests
 		[TestMethod]
 		public void Default_ModernApartments()
 		{
+			var buildingName = "ModernApartments";
+
 			TurnStrategyBase strategy = null;
+			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
+			{
+				BuildingName = buildingName,
+			};
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = "ModernApartments",
+				BuildingName = buildingName,
 			};
 
 			var runner = InitRunner();
@@ -70,13 +82,19 @@ namespace DotNet.Tests
 		[TestMethod]
 		public void Default_Cabin()
 		{
+			var buildingName = "Cabin";
+
 			TurnStrategyBase strategy = null;
+			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
+			{
+				BuildingName = buildingName,
+			};
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = "Cabin",
+				BuildingName = buildingName,
 			};
 
 			var runner = InitRunner();
@@ -87,13 +105,19 @@ namespace DotNet.Tests
 		[TestMethod]
 		public void Default_EnvironmentalHouse()
 		{
+			var buildingName = "EnvironmentalHouse";
+
 			TurnStrategyBase strategy = null;
+			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
+			{
+				BuildingName = buildingName,
+			};
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = "EnvironmentalHouse",
+				BuildingName = buildingName,
 			};
 
 			var runner = InitRunner();
@@ -104,13 +128,19 @@ namespace DotNet.Tests
 		[TestMethod]
 		public void Default_HighRise()
 		{
+			var buildingName = "HighRise";
+
 			TurnStrategyBase strategy = null;
+			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
+			{
+				BuildingName = buildingName,
+			};
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = "HighRise",
+				BuildingName = buildingName,
 			};
 
 			var runner = InitRunner();
@@ -121,13 +151,19 @@ namespace DotNet.Tests
 		[TestMethod]
 		public void Default_LuxuryResidence()
 		{
+			var buildingName = "LuxuryResidence";
+
 			TurnStrategyBase strategy = null;
+			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
+			{
+				BuildingName = buildingName,
+			};
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = "LuxuryResidence",
+				BuildingName = buildingName,
 			};
 
 			var runner = InitRunner();
