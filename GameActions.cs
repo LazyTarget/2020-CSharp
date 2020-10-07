@@ -3,5 +3,7 @@
 	public enum GameActions
 	{
 		StartBuild,
+		Build,
+		Wait,
 	}
 }
