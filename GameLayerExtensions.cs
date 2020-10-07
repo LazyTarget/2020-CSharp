@@ -76,8 +76,17 @@ namespace DotNet
 				yield return GameActions.Build;
 
 			// If has completed buildings and they are low on hp, then can do maintenance
-			if (state.ResidenceBuildings.Any(x => x.Health < 45))
-				yield return GameActions.Maintenance;
+			var damagedBuildings = state.ResidenceBuildings.Where(x => x.Health < 45).ToArray();
+			if (damagedBuildings.Any())
+			{
+				var buildingTypes = damagedBuildings.Select(x => x.BuildingName).Distinct().ToArray();
+				var affordedMaintenance = state.AvailableResidenceBuildings
+					.Where(x => buildingTypes.Contains(x.BuildingName))
+					.Where(x => x.MaintenanceCost < state.Funds)
+					.ToArray();
+				if (affordedMaintenance.Any())
+					yield return GameActions.Maintenance;
+			}
 
 			// If has completed buildings and they are low on hp, then can do maintenance
 			if (state.GetCompletedBuildings().Any())
