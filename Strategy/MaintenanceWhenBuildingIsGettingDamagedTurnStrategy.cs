@@ -13,8 +13,13 @@ namespace DotNet.Strategy
 		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
 		{
 			var damagedBuildings = state.ResidenceBuildings.Where(x => x.Health < ThresholdHealth).ToArray();
+
+			// Randomly choose building
 			//var building = damagedBuildings.ElementAtOrDefault(randomizer.Random.Next(0, damagedBuildings.Length));
+
+			// Choose the one with least health
 			var building = damagedBuildings.OrderBy(x => x.Health).FirstOrDefault();
+
 
 			if (building != null)
 			{

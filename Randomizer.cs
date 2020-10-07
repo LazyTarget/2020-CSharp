@@ -27,7 +27,7 @@ namespace DotNet
 			_strategy = new BuildCabinOnTurnZeroTurnStrategy(_strategy);
 		}
 
-		public void HandleTurn(int turn)
+		public void HandleTurn()
 		{
 			if (_strategy != null)
 			{
@@ -40,6 +40,7 @@ namespace DotNet
 			HandleAction(action);
 		}
 
+		[Obsolete("Better to use strategies")]
 		public void HandleAction(GameActions action)
 		{
 			Position position = null;
