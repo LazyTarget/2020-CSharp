@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DotNet.Interfaces;
 using DotNet.models;
 using DotNet.Strategy;
 
@@ -9,27 +10,34 @@ namespace DotNet
 	{
 		public readonly Random Random = new Random();
 
-		private readonly GameLayer _gameLayer;
+		private readonly IGameLayer _gameLayer;
 		private readonly GameState _gameState;
 		private readonly TurnStrategyBase _strategy;
 
-		public Randomizer(GameLayer gameLayer)
+		public Randomizer(IGameLayer gameLayer, TurnStrategyBase strategy = null)
 		{
 			_gameLayer = gameLayer;
 			_gameState = gameLayer.GetState();
 
-			//_strategy = new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy(_strategy);
-			//_strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(_strategy)
-			//{
-			//	BuildingName = "Cabin",
-			//};
-			_strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(_strategy);
-			_strategy = new AdjustBuildingTemperaturesTurnStrategy(_strategy);
-			_strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(_strategy);
-			_strategy = new BuildBuildingOnTurnZeroTurnStrategy(_strategy)
+			if (strategy == null)
 			{
-				BuildingName = "ModernApartments",
-			};
+				//_strategy = new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy(_strategy);
+				//_strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(_strategy)
+				//{
+				//	BuildingName = "Cabin",
+				//};
+				_strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(_strategy);
+				_strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(_strategy);
+				_strategy = new AdjustBuildingTemperaturesTurnStrategy(_strategy);
+				_strategy = new BuildBuildingOnTurnZeroTurnStrategy(_strategy)
+				{
+					BuildingName = "ModernApartments",
+				};
+			}
+			else
+			{
+				_strategy = strategy;
+			}
 		}
 
 		public void HandleTurn()

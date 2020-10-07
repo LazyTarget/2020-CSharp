@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DotNet.Interfaces;
 using DotNet.models;
 using Newtonsoft.Json;
 
