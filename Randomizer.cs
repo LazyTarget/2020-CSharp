@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DotNet.models;
+using DotNet.Strategy;
 
 namespace DotNet
 {
@@ -11,44 +12,29 @@ namespace DotNet
 		private readonly GameLayer _gameLayer;
 		private readonly GameState _gameState;
 		private readonly Random _random = new Random();
+		private readonly TurnStrategyBase _strategy;
 
 		public Randomizer(GameLayer gameLayer)
 		{
 			_gameLayer = gameLayer;
 			_gameState = gameLayer.GetState();
+
+			_strategy = new BuildCabinOnTurnZeroTurnStrategy(
+				new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy()
+			);
 		}
 
 		public void HandleTurn(int turn)
 		{
-			if (turn == 0)
+			if (_strategy != null)
 			{
-				// Build a Cabin
-				_gameLayer.ExecuteAction(GameActions.StartBuild, GetRandomBuildablePosition(), "Cabin");
-				return;
+				var executed = _strategy.TryExecuteStrategy(this, _gameLayer, _gameState);
+				if (executed)
+					return;
 			}
 
-			if (turn < 50)
-			{
-				// Only build when has nothing else to do
-				var action = GetRandomAction(x => x != GameActions.StartBuild);
-				if (action == GameActions.Wait)
-				{
-					action = GetRandomAction();
-					if (action == GameActions.StartBuild)
-					{
-						// Prioritize building Cabins
-						_gameLayer.ExecuteAction(GameActions.StartBuild, GetRandomBuildablePosition(), "Cabin");
-						return;
-					}
-				}
-
-				HandleAction(action);
-			}
-			else
-			{
-				var action = GetRandomAction();
-				HandleAction(action);
-			}
+			var action = GetRandomAction();
+			HandleAction(action);
 		}
 
 		public void HandleAction(GameActions action)
