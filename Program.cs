@@ -35,14 +35,14 @@ namespace DotNet
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(gameId))
-                    Console.WriteLine($"Resuming game: {gameId}");
-                else
-                    Console.WriteLine($"Resuming previous game");
-
-                GameLayer.GetNewGameInfo(gameId);
+	            GameLayer.GetNewGameInfo(gameId);
 
                 GameLayer.GetNewGameState(GameLayer.GetState().GameId);
+
+                if (!string.IsNullOrWhiteSpace(gameId))
+	                Console.WriteLine($"Resuming game specified game: {gameId} on turn {GameLayer.GetState().Turn}");
+                else
+	                Console.WriteLine($"Resuming previous game: {GameLayer.GetState().GameId} on turn {GameLayer.GetState().Turn}");
             }
             
             // Make actions
