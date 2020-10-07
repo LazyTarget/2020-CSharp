@@ -58,13 +58,13 @@ namespace DotNet.Strategy
 				}
 			}
 
-			var buildings = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>().ToArray();
-			var needsAdjustment = buildings
-				.Where(x => x.Temperature < MinTemperature + AllowedTemperatureDiffMargin)
+			var buildings = state.GetCompletedBuildings()
+				.OfType<BuiltResidenceBuilding>()
+				//.Where(x => x.Temperature < MinTemperature + AllowedTemperatureDiffMargin)
 				.OrderBy(x => x.Temperature)
 				.ToArray();
 
-			foreach (var building in needsAdjustment)
+			foreach (var building in buildings)
 			{
 				var blueprint = gameLayer.GetResidenceBlueprint(building.BuildingName);
 
