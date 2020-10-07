@@ -103,8 +103,20 @@ namespace DotNet
 
 			// If has completed buildings and they are low on hp, then can do maintenance
 			if (state.GetCompletedBuildings().Any())
+			{
 				if (state.AvailableUpgrades.Any(x => x.Cost < state.Funds))
-					yield return GameActions.BuyUpgrade;
+				{
+					var fraction = state.Funds / state.AvailableUpgrades.OrderByDescending(x => x.Cost).First().Cost;
+					if (fraction >= 6)
+					{
+						yield return GameActions.BuyUpgrade;
+					}
+					else
+					{
+
+					}
+				}
+			}
 
 			if (includeWait)
 				yield return GameActions.Wait;
