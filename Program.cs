@@ -69,8 +69,15 @@ namespace DotNet
                     Console.WriteLine("Error: " + error);
                 }
             }
-            Console.WriteLine($"Done with game: {GameLayer.GetState().GameId}");
-            Console.WriteLine(GameLayer.GetScore(gameId).FinalScore);
+
+            gameId = GameLayer.GetState().GameId;
+            Console.WriteLine($"Done with game: {gameId}");
+            
+            var score = GameLayer.GetScore(gameId);
+            Console.WriteLine($"Final score: {score.FinalScore}");
+            Console.WriteLine($"Co2: {score.TotalCo2}");
+            Console.WriteLine($"Pop: {score.FinalPopulation}");
+            Console.WriteLine($"Pop: {score.TotalHappiness}");
         }
 
         private static void take_turn(string gameId)
