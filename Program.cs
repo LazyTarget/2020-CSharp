@@ -18,17 +18,27 @@ namespace DotNet
             Console.WriteLine($"Starting game: {GameLayer.GetState().GameId}");
             GameLayer.StartGame(gameId);
 
+            var randomizer = new Randomizer(GameLayer);
             while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
             {
-                take_turn(gameId);
+                randomizer.RandomizeTurn();
+
+                //take_turn(gameId);
+
+
+
+                foreach (var message in GameLayer.GetState().Messages)
+                {
+                    Console.WriteLine(message);
+                }
+
+                foreach (var error in GameLayer.GetState().Errors)
+                {
+                    Console.WriteLine("Error: " + error);
+                }
             }
             Console.WriteLine($"Done with game: {GameLayer.GetState().GameId}");
             Console.WriteLine(GameLayer.GetScore(gameId).FinalScore);
-        }
-
-        private static void take_random_turn(string gameId)
-        {
-            Randomizer.Instance.RandomizeAction(GameLayer);
         }
 
         private static void take_turn(string gameId)
