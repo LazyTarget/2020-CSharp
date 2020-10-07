@@ -73,8 +73,8 @@ namespace DotNet
 			{
 				// Only build if will have plenty of money left...
 
-				var fraction = state.Funds / blueprints.OrderByDescending(x => x.Cost).First().Cost;
-				if (fraction >= 3)
+				var fraction = state.Funds / blueprints.Average(x => x.Cost);
+				if (fraction >= 2)
 				{
 					yield return GameActions.StartBuild;
 				}
@@ -109,7 +109,8 @@ namespace DotNet
 					var fraction = state.Funds / state.AvailableUpgrades.OrderByDescending(x => x.Cost).First().Cost;
 					if (fraction >= 6)
 					{
-						yield return GameActions.BuyUpgrade;
+						// todo: enable when logic is more stable
+						//yield return GameActions.BuyUpgrade;
 					}
 					else
 					{

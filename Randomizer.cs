@@ -20,21 +20,35 @@ namespace DotNet
 
 		public void HandleTurn(int turn)
 		{
-			if (turn < 3)
+			if (turn == 0)
 			{
-				// Prioritize on building in the beginning...
-				HandleAction(GameActions.StartBuild);
+				// Build a Cabin
+				_gameLayer.ExecuteAction(GameActions.StartBuild, GetRandomBuildablePosition(), "Cabin");
+				return;
+			}
+
+			if (turn < 50)
+			{
+				// Only build when has nothing else to do
+				var action = GetRandomAction(x => x != GameActions.StartBuild);
+				if (action == GameActions.Wait)
+				{
+					action = GetRandomAction();
+					if (action == GameActions.StartBuild)
+					{
+						// Prioritize building Cabins
+						_gameLayer.ExecuteAction(GameActions.StartBuild, GetRandomBuildablePosition(), "Cabin");
+						return;
+					}
+				}
+
+				HandleAction(action);
 			}
 			else
 			{
-				RandomizeAction();
+				var action = GetRandomAction();
+				HandleAction(action);
 			}
-		}
-
-		public void RandomizeAction()
-		{
-			var action = GetRandomAction();
-			HandleAction(action);
 		}
 
 		public void HandleAction(GameActions action)
@@ -86,9 +100,12 @@ namespace DotNet
 			return position;
 		}
 
-		public GameActions GetRandomAction()
+		public GameActions GetRandomAction(Func<GameActions, bool> predicate = null)
 		{
 			var actions = _gameLayer.GetPossibleActions(includeWait: false).ToArray();
+			if (predicate != null)
+				actions = actions.Where(predicate).ToArray();
+
 			var action = actions.ElementAtOrDefault(_random.Next(0, actions.Length));
 			if (action == GameActions.None)
 			{
