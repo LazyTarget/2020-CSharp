@@ -9,5 +9,6 @@
 		StartBuild,
 		Build,
 		Maintenance,
+		BuyUpgrade,
 	}
 }

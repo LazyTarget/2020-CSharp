@@ -59,6 +59,21 @@ namespace DotNet
 					var damagedBuilding = damagedBuildings.ElementAt(_random.Next(0, damagedBuildings.Length));
 					position = damagedBuilding.Position;
 					break;
+
+				case GameActions.BuyUpgrade:
+					var availableUpgrades = _gameState.AvailableUpgrades.Where(x => x.Cost < _gameState.Funds).ToArray();
+					var upgrade = availableUpgrades.ElementAt(_random.Next(0, availableUpgrades.Length));
+					argument = upgrade.Name; 
+					
+					var completedBuildings = _gameState.GetCompletedBuildings().ToArray();
+					var applicableBuildings = completedBuildings.Where(x => !x.Effects.Contains(upgrade.Name)).ToArray();
+					if (applicableBuildings.Length < 1)
+					{
+						action = GameActions.Wait;
+					}
+					var buildingToUpgrade = applicableBuildings.ElementAt(_random.Next(0, applicableBuildings.Length));
+					position = buildingToUpgrade.Position;
+					break;
 			}
 
 			_gameLayer.ExecuteAction(action, position, argument);

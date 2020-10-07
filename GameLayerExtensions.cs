@@ -44,11 +44,17 @@ namespace DotNet
 					gameLayer.Maintenance(position);
 					break;
 
-				case GameActions.Wait:
-					gameLayer.Wait();
+				case GameActions.BuyUpgrade:
+					var upgradeName = (string) argument ?? throw new ArgumentNullException(nameof(argument));
+					gameLayer.BuyUpgrade(position, upgradeName);
 					break;
 
 
+
+				case GameActions.Wait:
+					gameLayer.Wait();
+					break;
+					
 				case GameActions.None:
 					throw new NotSupportedException();
 
@@ -72,6 +78,11 @@ namespace DotNet
 			// If has completed buildings and they are low on hp, then can do maintenance
 			if (state.ResidenceBuildings.Any(x => x.Health < 45))
 				yield return GameActions.Maintenance;
+
+			// If has completed buildings and they are low on hp, then can do maintenance
+			if (state.GetCompletedBuildings().Any())
+				if (state.AvailableUpgrades.Any(x => x.Cost < state.Funds))
+					yield return GameActions.BuyUpgrade;
 
 			if (includeWait)
 				yield return GameActions.Wait;
