@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using DotNet.models;
 using DotNet.Strategy;
@@ -18,7 +18,8 @@ namespace DotNet
 			_gameLayer = gameLayer;
 			_gameState = gameLayer.GetState();
 
-			_strategy = new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy();
+			//_strategy = new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy(_strategy);
+			_strategy = new BuildCabinsWhenCloseToPopMaxTurnStrategy(_strategy);
 			_strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(_strategy)
 			{
 				ThresholdHealth = 50,
