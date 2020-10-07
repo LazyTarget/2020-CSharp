@@ -10,7 +10,7 @@ namespace DotNet.Strategy
 		{
 		}
 
-		public double PopulationPercentageThreshold { get; set; } = 0.9;
+		public double PopulationPercentageThreshold { get; set; } = 0.805;
 
 		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
 		{
@@ -30,11 +30,7 @@ namespace DotNet.Strategy
 			var currentPopPercentage = currentPop / (double)currentPopMax;
 
 
-			Console.WriteLine("BuildCabinsWhenCloseToPopMaxTurnStrategy::");
-			Console.WriteLine($"CurrentPop = {currentPop}");
-			Console.WriteLine($"CurrentPopMax = {currentPopMax}");
-			Console.WriteLine($"CurrentPopPercentage = {currentPopPercentage}");
-			Console.WriteLine($"PendingPopMaxIncrease = {pendingPopMaxIncrease}");
+			Console.WriteLine($"BuildCabinsWhenCloseToPopMaxTurnStrategy :: Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
 
 			if (currentPopPercentage > PopulationPercentageThreshold)
 			{
