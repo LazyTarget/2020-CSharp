@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DotNet.Interfaces;
 using DotNet.models;
 
 namespace DotNet.Strategy
@@ -13,7 +14,7 @@ namespace DotNet.Strategy
 
 		public bool PrioritizeWeakest { get; set; } = false;
 
-		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
+		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
 			var damagedBuildings = state.ResidenceBuildings.Where(x => x.Health < ThresholdHealth)
 				.OrderBy(x => x.Health)
@@ -51,7 +52,7 @@ namespace DotNet.Strategy
 
 			
 			var position = building.Position;
-			gameLayer.ExecuteAction(GameActions.Maintenance, position);
+			gameLayer.Maintenance(position, state.GameId);
 			return true;
 		}
 	}

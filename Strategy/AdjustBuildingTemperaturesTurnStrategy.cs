@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using DotNet.Interfaces;
 using DotNet.models;
 
 namespace DotNet.Strategy
@@ -26,7 +27,7 @@ namespace DotNet.Strategy
 
 		public double TargetTemperature { get; set; } = 21;
 
-		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
+		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
 			double? predictedTrend = null;
 			var outdoorTemp = state.CurrentTemp;
@@ -68,7 +69,7 @@ namespace DotNet.Strategy
 
 			foreach (var building in buildings)
 			{
-				var blueprint = gameLayer.GetResidenceBlueprint(building.BuildingName);
+				var blueprint = state.AvailableResidenceBuildings.Find(x => x.BuildingName == building.BuildingName);
 
 				// Predict next temperature
 				var newTemp =
@@ -167,7 +168,7 @@ namespace DotNet.Strategy
 				}
 
 
-				gameLayer.AdjustEnergy(building.Position, energy);
+				gameLayer.AdjustEnergy(building.Position, energy, state.GameId);
 				return true;
 			}
 

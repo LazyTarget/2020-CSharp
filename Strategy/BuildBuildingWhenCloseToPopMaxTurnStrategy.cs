@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DotNet.Interfaces;
 using DotNet.models;
 
 namespace DotNet.Strategy
@@ -14,7 +15,7 @@ namespace DotNet.Strategy
 
 		public double PopulationPercentageThreshold { get; set; } = 0.805;
 
-		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
+		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
 			// Only build when has nothing else to do
 			var currentPop = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>().Sum(x => x.CurrentPop);
@@ -41,7 +42,7 @@ namespace DotNet.Strategy
 				{
 					var position = randomizer.GetRandomBuildablePosition();
 
-					gameLayer.ExecuteAction(GameActions.StartBuild, position, building.BuildingName);
+					gameLayer.StartBuild(position, building.BuildingName, state.GameId);
 					return true;
 				}
 			}

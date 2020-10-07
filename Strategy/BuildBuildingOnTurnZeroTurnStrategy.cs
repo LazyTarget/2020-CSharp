@@ -1,4 +1,6 @@
-﻿namespace DotNet.Strategy
+﻿using DotNet.Interfaces;
+
+namespace DotNet.Strategy
 {
 	public class BuildBuildingOnTurnZeroTurnStrategy : TurnStrategyBase
 	{
@@ -8,13 +10,13 @@
 
 		public string BuildingName { get; set; } = "Cabin";
 
-		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
+		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
 			if (state.Turn != 0)
 				return false;
 
 			var position = randomizer.GetRandomBuildablePosition();
-			gameLayer.ExecuteAction(GameActions.StartBuild, position, BuildingName);
+			gameLayer.StartBuild(position, BuildingName, state.GameId);
 			return true;
 		}
 	}

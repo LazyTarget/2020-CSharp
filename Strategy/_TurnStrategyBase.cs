@@ -1,4 +1,6 @@
-﻿namespace DotNet.Strategy
+﻿using DotNet.Interfaces;
+
+namespace DotNet.Strategy
 {
 	public abstract class TurnStrategyBase
 	{
@@ -9,7 +11,7 @@
 			_parent = parent;
 		}
 
-		public virtual bool TryExecuteStrategy(Randomizer randomizer, GameLayer gameLayer, GameState state)
+		public virtual bool TryExecuteStrategy(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
 			var result = TryExecuteTurn(randomizer, gameLayer, state);
 			if (!result && _parent != null)
@@ -17,6 +19,6 @@
 			return result;
 		}
 
-		protected abstract bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state);
+		protected abstract bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state);
 	}
 }

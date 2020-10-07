@@ -1,4 +1,6 @@
-﻿namespace DotNet.Strategy
+﻿using DotNet.Interfaces;
+
+namespace DotNet.Strategy
 {
 	public class BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy : TurnStrategyBase
 	{
@@ -6,7 +8,7 @@
 		{
 		}
 
-		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
+		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
 			// Only build when has nothing else to do
 			var action = randomizer.GetRandomAction(x => x != GameActions.StartBuild);
@@ -17,7 +19,7 @@
 				{
 					// Prioritize building Cabins
 					var position = randomizer.GetRandomBuildablePosition();
-					gameLayer.ExecuteAction(GameActions.StartBuild, position, "Cabin");
+					gameLayer.StartBuild(position, "Cabin", state.GameId);
 					return true;
 				}
 			}
