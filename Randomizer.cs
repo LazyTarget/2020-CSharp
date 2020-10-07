@@ -18,14 +18,27 @@ namespace DotNet
 			_gameState = gameLayer.GetState();
 		}
 
-		public void RandomizeTurn()
+		public void HandleTurn(int turn)
 		{
-			RandomizeAction();
+			if (turn < 5)
+			{
+				// Prioritize on building in the beginning...
+				HandleAction(GameActions.StartBuild);
+			}
+			else
+			{
+				RandomizeAction();
+			}
 		}
 
 		public void RandomizeAction()
 		{
 			var action = GetRandomAction();
+			HandleAction(action);
+		}
+
+		public void HandleAction(GameActions action)
+		{
 			Position position = null;
 			object argument = null;
 			switch (action)

@@ -49,7 +49,7 @@ namespace DotNet
             var randomizer = new Randomizer(GameLayer);
             while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
             {
-                randomizer.RandomizeTurn();
+                randomizer.HandleTurn(GameLayer.GetState().Turn);
 
                 //take_turn(gameId);
 
