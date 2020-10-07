@@ -9,7 +9,7 @@ namespace DotNet.Strategy
 		{
 		}
 
-		public int ThresholdHealth { get; set; } = 50;
+		public int ThresholdHealth { get; set; } = 45;
 
 		public bool PrioritizeWeakest { get; set; } = false;
 
@@ -41,7 +41,12 @@ namespace DotNet.Strategy
 			else
 			{
 				// Can afford maintenance on the weakest building
-				building = affordedBuildings.First();
+				building = affordedBuildings.FirstOrDefault();
+				if (building == null)
+				{
+					// Can't afford it, must wait until can afford
+					return false;
+				}
 			}
 
 			

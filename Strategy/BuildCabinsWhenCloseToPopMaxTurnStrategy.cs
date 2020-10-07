@@ -10,7 +10,7 @@ namespace DotNet.Strategy
 		{
 		}
 
-		public double PopulationPercentageThreshold { get; set; } = 0.8;
+		public double PopulationPercentageThreshold { get; set; } = 0.9;
 
 		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
 		{
