@@ -26,11 +26,10 @@ namespace DotNet.Strategy
 
 		protected override bool TryExecuteTurn(Randomizer randomizer, GameLayer gameLayer, GameState state)
 		{
+			double? predictedTrend = null;
 			var outdoorTemp = state.CurrentTemp;
 			if (state.TemperatureHistory?.Count > 2)
 			{
-				double? predictedTrend = null;
-
 				// Predict outdoor temperature
 				var prePreviousTemp = state.TemperatureHistory.Reverse().Skip(2).First().Value;
 				var previousTemp = state.TemperatureHistory.Reverse().Skip(1).First().Value;
@@ -83,6 +82,11 @@ namespace DotNet.Strategy
 					continue;
 				}
 
+				if (newTemp < MinTemperature)
+				{
+					// Is below minimum, fake that it is much colder than it is to make a faster recovery
+					outdoorTemp -= (TargetTemperature - building.Temperature);
+				}
 				if (building.Temperature < MinTemperature)
 				{
 					// Is below minimum, fake that it is much colder than it is to make a faster recovery
@@ -91,6 +95,13 @@ namespace DotNet.Strategy
 
 				var energy= blueprint.BaseEnergyNeed + (building.Temperature - outdoorTemp)
 					* blueprint.Emissivity / 1 + 0.5 - building.CurrentPop * 0.04;
+				if (predictedTrend.GetValueOrDefault() > 0)
+				{
+					// Trend is getting colder
+					// Then apply more energy to make sure has enough heating...
+					energy *= 1.1;
+				}
+
 
 				// Predict next temperature, if change energy
 				var predictedNewTemp =
