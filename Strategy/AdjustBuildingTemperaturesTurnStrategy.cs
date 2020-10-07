@@ -18,6 +18,8 @@ namespace DotNet.Strategy
 
 		public double MinTemperature { get; set; } = 18;
 
+		public double MaxTemperature { get; set; } = 24;
+
 		public double AllowedDiffMargin { get; set; } = 0.2;
 
 		public double AllowedTemperatureDiffMargin { get; set; } = 2;
@@ -85,13 +87,25 @@ namespace DotNet.Strategy
 				if (newTemp < MinTemperature)
 				{
 					// Is below minimum, fake that it is much colder than it is to make a faster recovery
-					outdoorTemp -= (TargetTemperature - building.Temperature);
+					outdoorTemp -= Math.Abs(TargetTemperature - building.Temperature);
 				}
 				if (building.Temperature < MinTemperature)
 				{
 					// Is below minimum, fake that it is much colder than it is to make a faster recovery
-					outdoorTemp -= (TargetTemperature - building.Temperature);
+					outdoorTemp -= Math.Abs(TargetTemperature - building.Temperature);
 				}
+
+				if (newTemp > MaxTemperature)
+				{
+					// Is above maximum, fake that it is much hotter than it is to make a faster recovery
+					outdoorTemp += Math.Abs(TargetTemperature - building.Temperature);
+				}
+				if (building.Temperature > MaxTemperature)
+				{
+					// Is above maximum, fake that it is much hotter than it is to make a faster recovery
+					outdoorTemp += Math.Abs(TargetTemperature - building.Temperature);
+				}
+
 
 				var energy= blueprint.BaseEnergyNeed + (building.Temperature - outdoorTemp)
 					* blueprint.Emissivity / 1 + 0.5 - building.CurrentPop * 0.04;
