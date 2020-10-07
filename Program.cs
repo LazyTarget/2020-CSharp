@@ -14,9 +14,21 @@ namespace DotNet
 
         public static void Main(string[] args)
         {
-            var gameId = GameLayer.NewGame(Map);
-            Console.WriteLine($"Starting game: {GameLayer.GetState().GameId}");
-            GameLayer.StartGame(gameId);
+            var gameId = args.ElementAtOrDefault(0);
+            if (string.IsNullOrWhiteSpace(gameId))
+            {
+                 Console.WriteLine($"New game: {Map}");
+                 gameId = GameLayer.NewGame(Map);
+
+                 Console.WriteLine($"Starting game: {gameId}");
+                 GameLayer.StartGame(gameId);
+            }
+            else
+            {
+                Console.WriteLine($"Resuming game: {gameId}");
+                GameLayer.GetNewGameInfo(gameId);
+            }
+            
 
             var randomizer = new Randomizer(GameLayer);
             while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
