@@ -26,6 +26,11 @@ namespace DotNet
             Console.WriteLine(GameLayer.GetScore(gameId).FinalScore);
         }
 
+        private static void take_random_turn(string gameId)
+        {
+            Randomizer.Instance.RandomizeAction(GameLayer);
+        }
+
         private static void take_turn(string gameId)
         {
             // TODO Implement your artificial intelligence here.
@@ -49,20 +54,19 @@ namespace DotNet
                     }
                 }
 
-                GameLayer.StartBuild(new Position(x, y), state.AvailableResidenceBuildings[0].BuildingName,
-                    gameId);
+                GameLayer.StartBuild(new Position(x, y), state.AvailableResidenceBuildings[0].BuildingName, gameId);
             }
             else
             {
-                GameLayer.RandomizeAction();
-
                 var building = state.ResidenceBuildings[0];
                 if (building.BuildProgress < 100)
                 {
                     GameLayer.Build(building.Position, gameId);
                 }
                 else if (!building.Effects.Contains(state.AvailableUpgrades[0].Name))
+                {
                     GameLayer.BuyUpgrade(building.Position, state.AvailableUpgrades[0].Name, gameId);
+                }
                 else if (building.Health < 50)
                 {
                     GameLayer.Maintenance(building.Position, gameId);
@@ -82,7 +86,10 @@ namespace DotNet
                         * bluePrint.Emissivity / 1 - 0.5 - building.CurrentPop * 0.04;
                     GameLayer.AdjustEnergy(building.Position, energy, gameId);
                 }
-                else GameLayer.Wait(gameId);
+                else
+                {
+                    GameLayer.Wait(gameId);
+                }
 
                 foreach (var message in GameLayer.GetState().Messages)
                 {

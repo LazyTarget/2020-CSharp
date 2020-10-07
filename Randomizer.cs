@@ -8,17 +8,35 @@ namespace DotNet
 {
 	public class Randomizer
 	{
-		public static readonly Randomizer Instance = new Randomizer();
-
+		private readonly GameLayer _gameLayer;
 		private readonly Random _random = new Random();
-		
-		public void RandomizeAction(GameLayer gameLayer)
-		{
-			var actions = gameLayer.GetPossibleActions().ToArray();
-			var action = actions.ElementAt(_random.Next(0, actions.Length));
 
-			Position position = null;
-			gameLayer.ExecuteAction(action, position);
+		public Randomizer(GameLayer gameLayer)
+		{
+			_gameLayer = gameLayer;
+		}
+		
+		public void RandomizeAction()
+		{
+			var action = GetRandomAction();
+			var position = GetRandomPosition();
+
+			_gameLayer.ExecuteAction(action, position);
+		}
+		
+		public Position GetRandomPosition()
+		{
+			var state = _gameLayer.GetState();
+			var positions = state.GetBuildablePositions().ToArray();
+			var position = positions.ElementAt(_random.Next(0, positions.Length));
+			return position;
+		}
+
+		public GameActions GetRandomAction()
+		{
+			var actions = _gameLayer.GetPossibleActions().ToArray();
+			var action = actions.ElementAt(_random.Next(0, actions.Length));
+			return action;
 		}
 	}
 }

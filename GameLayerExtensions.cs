@@ -31,8 +31,9 @@ namespace DotNet
 		{
 			switch (action)
 			{
-				case GameActions.Build:
-					throw new NotImplementedException();
+				case GameActions.StartBuild:
+					var buildingName = (string) argument ?? throw new ArgumentNullException(nameof(argument));
+					gameLayer.StartBuild(position, buildingName);
 					break;
 
 				default:
@@ -42,7 +43,7 @@ namespace DotNet
 
 		public static IEnumerable<GameActions> GetPossibleActions(this GameLayer gameLayer)
 		{
-			yield return GameActions.Build;
+			yield return GameActions.StartBuild;
 		}
 	}
 }
