@@ -10,26 +10,42 @@ namespace DotNet
         private const string ApiKey = "";           // TODO: Enter your API key
         // The different map names can be found on considition.com/rules
         private const string Map = "training1";     // TODO: Enter your desired map
-        private static readonly GameLayer GameLayer = new GameLayer(ApiKey);
+        private static GameLayer GameLayer;
 
         public static void Main(string[] args)
         {
-            var gameId = args.ElementAtOrDefault(0);
-            if (string.IsNullOrWhiteSpace(gameId))
+            // Init GameLayer
+            var apiKey = args.ElementAtOrDefault(0) ?? ApiKey;
+            while (string.IsNullOrWhiteSpace(apiKey))
             {
-                 Console.WriteLine($"New game: {Map}");
-                 gameId = GameLayer.NewGame(Map);
+                Console.Write("ApiKey: ");
+                apiKey = Console.ReadLine();
+            }
+            GameLayer = new GameLayer(apiKey);
 
-                 Console.WriteLine($"Starting game: {gameId}");
-                 GameLayer.StartGame(gameId);
+            // Init Game
+            var gameId = args.ElementAtOrDefault(1);
+            if (gameId?.ToLower() == "new")
+            {
+                Console.WriteLine($"New game: {Map}");
+                gameId = GameLayer.NewGame(Map);
+    
+                Console.WriteLine($"Starting game: {gameId}");
+                GameLayer.StartGame(gameId);
             }
             else
             {
-                Console.WriteLine($"Resuming game: {gameId}");
+                if (!string.IsNullOrWhiteSpace(gameId))
+                    Console.WriteLine($"Resuming game: {gameId}");
+                else
+                    Console.WriteLine($"Resuming previous game");
+
                 GameLayer.GetNewGameInfo(gameId);
+
+                GameLayer.GetNewGameState(GameLayer.GetState().GameId);
             }
             
-
+            // Make actions
             var randomizer = new Randomizer(GameLayer);
             while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
             {
