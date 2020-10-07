@@ -36,30 +36,54 @@ namespace DotNet
 					gameLayer.StartBuild(position, buildingName);
 					break;
 
+				case GameActions.Build:
+					gameLayer.Build(position);
+					break;
+
+				case GameActions.Wait:
+					gameLayer.Wait();
+					break;
+
+
+				case GameActions.None:
+					throw new NotSupportedException();
+
 				default:
 					throw new NotImplementedException();
 			}
 		}
 
-		public static IEnumerable<GameActions> GetPossibleActions(this GameLayer gameLayer)
+		public static IEnumerable<GameActions> GetPossibleActions(this GameLayer gameLayer, bool includeWait = true)
 		{
 			var state = gameLayer.GetState();
 
 			// If has money availble for a building, then can start building
-			if (state.GetAvailableBuildings().Any(x => x.Cost <= state.Funds))
+			if (state.GetBuildingBlueprints().Any(x => x.Cost <= state.Funds))
 				yield return GameActions.StartBuild;
 
 			// If has non-completed buildings, then can build
 			if (state.ResidenceBuildings.Any(x => x.BuildProgress < 100))
 				yield return GameActions.Build;
 
-			yield return GameActions.Wait;
+			if (includeWait)
+				yield return GameActions.Wait;
 		}
-
-
-		public static IEnumerable<BlueprintBuilding> GetAvailableBuildings(this GameState state)
+		
+		public static IEnumerable<BlueprintBuilding> GetBuildingBlueprints(this GameState state)
 		{
 			var buildings = state.AvailableResidenceBuildings.OfType<BlueprintBuilding>().Concat(state.AvailableUtilityBuildings);
+			return buildings;
+		}
+
+		public static IEnumerable<BuiltBuilding> GetBuiltBuildings(this GameState state)
+		{
+			var buildings = state.ResidenceBuildings.OfType<BuiltBuilding>().Concat(state.UtilityBuildings);
+			return buildings;
+		}
+
+		public static IEnumerable<BuiltBuilding> GetBuildingsUnderConstruction(this GameState state)
+		{
+			var buildings = state.GetBuiltBuildings().Where(x => x.BuildProgress < 100);
 			return buildings;
 		}
 	}

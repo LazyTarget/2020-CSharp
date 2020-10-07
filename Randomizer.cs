@@ -25,20 +25,27 @@ namespace DotNet
 
 		public void RandomizeAction()
 		{
-			object argument = null;
 			var action = GetRandomAction();
-			var position = GetRandomPosition();
+			Position position = null;
+			object argument = null;
 			switch (action)
 			{
 				case GameActions.StartBuild:
+					position = GetRandomBuildablePosition();
 					argument = GetRandomBuildingName();
+					break;
+
+				case GameActions.Build:
+					var buildingsUnderConstruction = _gameState.GetBuildingsUnderConstruction().ToArray();
+					var building = buildingsUnderConstruction.ElementAt(_random.Next(0, buildingsUnderConstruction.Length));
+					position = building.Position;
 					break;
 			}
 
 			_gameLayer.ExecuteAction(action, position, argument);
 		}
 		
-		public Position GetRandomPosition()
+		public Position GetRandomBuildablePosition()
 		{
 			var positions = _gameState.GetBuildablePositions().ToArray();
 			var position = positions.ElementAt(_random.Next(0, positions.Length));
@@ -47,8 +54,13 @@ namespace DotNet
 
 		public GameActions GetRandomAction()
 		{
-			var actions = _gameLayer.GetPossibleActions().ToArray();
-			var action = actions.ElementAt(_random.Next(0, actions.Length));
+			var actions = _gameLayer.GetPossibleActions(includeWait: false).ToArray();
+			var action = actions.ElementAtOrDefault(_random.Next(0, actions.Length));
+			if (action == GameActions.None)
+			{
+				// Can't do anything else, then should Wait
+				action = GameActions.Wait;
+			}
 			return action;
 		}
 
