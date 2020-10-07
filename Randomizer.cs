@@ -23,6 +23,7 @@ namespace DotNet
 			{
 				ThresholdHealth = 50,
 			};
+			_strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(_strategy);
 			_strategy = new BuildCabinOnTurnZeroTurnStrategy(_strategy);
 		}
 
