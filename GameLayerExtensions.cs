@@ -27,6 +27,14 @@ namespace DotNet
 			}
 		}
 
+		public static void ExecuteAction(this GameLayer gameLayer, GameActions action)
+		{
+			if (action == GameActions.Wait)
+				ExecuteAction(gameLayer, action, position: null);
+			else
+				throw new InvalidOperationException($"Only 'GameActions.Wait' can be invoked without a position");
+		}
+
 		public static void ExecuteAction(this GameLayer gameLayer, GameActions action, Position position, object argument = null)
 		{
 			switch (action)

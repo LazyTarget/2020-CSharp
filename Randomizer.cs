@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using DotNet.models;
 using DotNet.Strategy;
@@ -37,8 +37,11 @@ namespace DotNet
 					return;
 			}
 
-			var action = GetRandomAction();
-			HandleAction(action);
+			//var action = GetRandomAction();
+			//HandleAction(action);
+
+			Console.WriteLine("No strategy executed, invoking Wait as fallback");
+			_gameLayer.ExecuteAction(GameActions.Wait);
 		}
 
 		[Obsolete("Better to use strategies")]
