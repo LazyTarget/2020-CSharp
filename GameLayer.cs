@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace DotNet
 {
-    public class GameLayer
+    public class GameLayer : IGameLayer
     {
         private GameState _gameState;
 

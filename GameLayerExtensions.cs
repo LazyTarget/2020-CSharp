@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DotNet.Interfaces;
 using DotNet.models;
 
 namespace DotNet
@@ -27,7 +28,7 @@ namespace DotNet
 			}
 		}
 
-		public static void ExecuteAction(this GameLayer gameLayer, GameActions action)
+		public static void ExecuteAction(this IGameLayer gameLayer, GameActions action)
 		{
 			if (action == GameActions.Wait)
 				ExecuteAction(gameLayer, action, position: null);
@@ -35,32 +36,33 @@ namespace DotNet
 				throw new InvalidOperationException($"Only 'GameActions.Wait' can be invoked without a position");
 		}
 
-		public static void ExecuteAction(this GameLayer gameLayer, GameActions action, Position position, object argument = null)
+		public static void ExecuteAction(this IGameLayer gameLayer, GameActions action, Position position, object argument = null)
 		{
+			var state = gameLayer.GetState();
 			switch (action)
 			{
 				case GameActions.StartBuild:
 					var buildingName = (string) argument ?? throw new ArgumentNullException(nameof(argument));
-					gameLayer.StartBuild(position, buildingName);
+					gameLayer.StartBuild(position, buildingName, state.GameId);
 					break;
 
 				case GameActions.Build:
-					gameLayer.Build(position);
+					gameLayer.Build(position, state.GameId);
 					break;
 
 				case GameActions.Maintenance:
-					gameLayer.Maintenance(position);
+					gameLayer.Maintenance(position, state.GameId);
 					break;
 
 				case GameActions.BuyUpgrade:
 					var upgradeName = (string) argument ?? throw new ArgumentNullException(nameof(argument));
-					gameLayer.BuyUpgrade(position, upgradeName);
+					gameLayer.BuyUpgrade(position, upgradeName, state.GameId);
 					break;
 
 
 
 				case GameActions.Wait:
-					gameLayer.Wait();
+					gameLayer.Wait(state.GameId);
 					break;
 					
 				case GameActions.None:
@@ -71,7 +73,7 @@ namespace DotNet
 			}
 		}
 
-		public static IEnumerable<GameActions> GetPossibleActions(this GameLayer gameLayer, bool includeWait = true)
+		public static IEnumerable<GameActions> GetPossibleActions(this IGameLayer gameLayer, bool includeWait = true)
 		{
 			var state = gameLayer.GetState();
 
