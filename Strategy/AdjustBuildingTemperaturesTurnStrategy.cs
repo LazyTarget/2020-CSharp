@@ -7,12 +7,12 @@ using DotNet.models;
 
 namespace DotNet.Strategy
 {
-	public class AdjustBuildingTemperatureWhenTooLowTurnStrategy : TurnStrategyBase
+	public class AdjustBuildingTemperaturesTurnStrategy : TurnStrategyBase
 	{
 		private const double _degreesPerPop = 0.04;
 		private const double _degreesPerExcessMwh = 0.75;
 
-		public AdjustBuildingTemperatureWhenTooLowTurnStrategy(TurnStrategyBase parent = null) : base(parent)
+		public AdjustBuildingTemperaturesTurnStrategy(TurnStrategyBase parent = null) : base(parent)
 		{
 		}
 
@@ -34,16 +34,16 @@ namespace DotNet.Strategy
 				var prePreviousTemp = state.TemperatureHistory.Reverse().Skip(2).First().Value;
 				var previousTemp = state.TemperatureHistory.Reverse().Skip(1).First().Value;
 
-				var previousDiff = prePreviousTemp - previousTemp;
-				var currentDiff = previousTemp - state.CurrentTemp;
+				var previousDiff = previousTemp - prePreviousTemp;
+				var currentDiff = state.CurrentTemp - previousTemp;
 				if (previousDiff > 0 && currentDiff > 0)
 				{
-					// Trend is "getting colder"
+					// Trend is "getting hotter"
 					predictedTrend = (previousDiff + currentDiff) / 2;
 				}
 				else if (previousDiff < 0 && currentDiff < 0)
 				{
-					// Trend is "getting hotter"
+					// Trend is "getting colder"
 					predictedTrend = (previousDiff + currentDiff) / 2;
 				}
 

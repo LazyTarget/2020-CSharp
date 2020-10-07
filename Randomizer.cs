@@ -24,8 +24,7 @@ namespace DotNet
 			//	BuildingName = "Cabin",
 			//};
 			_strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(_strategy);
-			_strategy = new AdjustBuildingTemperatureWhenTooHighTurnStrategy(_strategy);
-			_strategy = new AdjustBuildingTemperatureWhenTooLowTurnStrategy(_strategy);
+			_strategy = new AdjustBuildingTemperaturesTurnStrategy(_strategy);
 			_strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(_strategy);
 			_strategy = new BuildBuildingOnTurnZeroTurnStrategy(_strategy)
 			{
