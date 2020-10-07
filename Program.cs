@@ -25,59 +25,22 @@ namespace DotNet
             GameLayer = new GameLayer(apiKey);
 
             // Init Game
+            GameRunner runner;
             var gameId = args.ElementAtOrDefault(1);
             if (gameId?.ToLower() == "new")
             {
-                Console.WriteLine($"New game: {Map}");
-                gameId = GameLayer.NewGame(Map);
-    
-                Console.WriteLine($"Starting game: {gameId}");
-                GameLayer.StartGame(gameId);
+	            runner = GameRunner.New(apiKey, Map);
             }
             else
             {
-	            GameLayer.GetNewGameInfo(gameId);
-
-                GameLayer.GetNewGameState(GameLayer.GetState().GameId);
-
-                if (!string.IsNullOrWhiteSpace(gameId))
-	                Console.WriteLine($"Resuming game specified game: {gameId} on turn {GameLayer.GetState().Turn}");
-                else
-	                Console.WriteLine($"Resuming previous game: {GameLayer.GetState().GameId} on turn {GameLayer.GetState().Turn}");
-            }
-            
-            // Make actions
-            var randomizer = new Randomizer(GameLayer);
-            while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
-            {
-                var state = GameLayer.GetState();
-                PrintDebug_NewTurn(state);
-
-                randomizer.HandleTurn();
-
-                //take_turn(gameId);
-
-
-
-                foreach (var message in GameLayer.GetState().Messages)
-                {
-                    Console.WriteLine(message);
-                }
-
-                foreach (var error in GameLayer.GetState().Errors)
-                {
-                    Console.WriteLine("Error: " + error);
-                }
+	            runner = GameRunner.Resume(apiKey, gameId);
             }
 
-            gameId = GameLayer.GetState().GameId;
-            Console.WriteLine($"Done with game: {gameId}");
-            
-            var score = GameLayer.GetScore(gameId);
-            Console.WriteLine($"Final score: {score.FinalScore}");
-            Console.WriteLine($"Co2: {score.TotalCo2}");
-            Console.WriteLine($"Pop: {score.FinalPopulation}");
-            Console.WriteLine($"Pop: {score.TotalHappiness}");
+            var score = runner.Run();
+            //Console.WriteLine($"Final score: {score.FinalScore}");
+            //Console.WriteLine($"Co2: {score.TotalCo2}");
+            //Console.WriteLine($"Pop: {score.FinalPopulation}");
+            //Console.WriteLine($"Pop: {score.TotalHappiness}");
         }
 
         private static void take_turn(string gameId)
@@ -152,18 +115,5 @@ namespace DotNet
             }
         }
 
-        private static void PrintDebug_NewTurn(GameState state)
-        {
-            var currentPop = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>().Sum(x => x.CurrentPop);
-
-            var currentPopMax = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>()
-                .Join(state.AvailableResidenceBuildings, ok => ok.BuildingName, ik => ik.BuildingName,
-                    (rb, bp) => new { bp, rb })
-                .Sum(x => x.bp.MaxPop);
-
-            var currentPopPercentage = currentPop / (double)currentPopMax;
-
-            Debug.WriteLine($"Begin New Turn :: Turn={state.Turn}, Funds={state.Funds}, Temp={state.CurrentTemp}, Pop: {currentPop}/{currentPopMax} ({currentPopPercentage:P2})");
-        }
     }
 }
