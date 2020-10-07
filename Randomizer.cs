@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using DotNet.models;
 using DotNet.Strategy;
@@ -9,9 +7,10 @@ namespace DotNet
 {
 	public class Randomizer
 	{
+		public readonly Random Random = new Random();
+
 		private readonly GameLayer _gameLayer;
 		private readonly GameState _gameState;
-		private readonly Random _random = new Random();
 		private readonly TurnStrategyBase _strategy;
 
 		public Randomizer(GameLayer gameLayer)
@@ -19,9 +18,12 @@ namespace DotNet
 			_gameLayer = gameLayer;
 			_gameState = gameLayer.GetState();
 
-			_strategy = new BuildCabinOnTurnZeroTurnStrategy(
-				new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy()
-			);
+			_strategy = new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy();
+			_strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(_strategy)
+			{
+				ThresholdHealth = 50,
+			};
+			_strategy = new BuildCabinOnTurnZeroTurnStrategy(_strategy);
 		}
 
 		public void HandleTurn(int turn)
@@ -50,19 +52,19 @@ namespace DotNet
 
 				case GameActions.Build:
 					var buildingsUnderConstruction = _gameState.GetBuildingsUnderConstruction().ToArray();
-					var building = buildingsUnderConstruction.ElementAt(_random.Next(0, buildingsUnderConstruction.Length));
+					var building = buildingsUnderConstruction.ElementAt(Random.Next(0, buildingsUnderConstruction.Length));
 					position = building.Position;
 					break;
 
 				case GameActions.Maintenance:
 					var damagedBuildings = _gameState.ResidenceBuildings.Where(x => x.Health < 50).ToArray();
-					var damagedBuilding = damagedBuildings.ElementAt(_random.Next(0, damagedBuildings.Length));
+					var damagedBuilding = damagedBuildings.ElementAt(Random.Next(0, damagedBuildings.Length));
 					position = damagedBuilding.Position;
 					break;
 
 				case GameActions.BuyUpgrade:
 					var availableUpgrades = _gameState.AvailableUpgrades.Where(x => x.Cost < _gameState.Funds).ToArray();
-					var upgrade = availableUpgrades.ElementAt(_random.Next(0, availableUpgrades.Length));
+					var upgrade = availableUpgrades.ElementAt(Random.Next(0, availableUpgrades.Length));
 					argument = upgrade.Name; 
 					
 					var completedBuildings = _gameState.GetCompletedBuildings().ToArray();
@@ -71,7 +73,7 @@ namespace DotNet
 					{
 						action = GameActions.Wait;
 					}
-					var buildingToUpgrade = applicableBuildings.ElementAt(_random.Next(0, applicableBuildings.Length));
+					var buildingToUpgrade = applicableBuildings.ElementAt(Random.Next(0, applicableBuildings.Length));
 					position = buildingToUpgrade.Position;
 					break;
 			}
@@ -82,7 +84,7 @@ namespace DotNet
 		public Position GetRandomBuildablePosition()
 		{
 			var positions = _gameState.GetBuildablePositions().ToArray();
-			var position = positions.ElementAt(_random.Next(0, positions.Length));
+			var position = positions.ElementAt(Random.Next(0, positions.Length));
 			return position;
 		}
 
@@ -92,7 +94,7 @@ namespace DotNet
 			if (predicate != null)
 				actions = actions.Where(predicate).ToArray();
 
-			var action = actions.ElementAtOrDefault(_random.Next(0, actions.Length));
+			var action = actions.ElementAtOrDefault(Random.Next(0, actions.Length));
 			if (action == GameActions.None)
 			{
 				// Can't do anything else, then should Wait
@@ -104,7 +106,7 @@ namespace DotNet
 		public string GetRandomBuildingName()
 		{
 			var names = _gameState.AvailableResidenceBuildings.Select(x => x.BuildingName).ToArray();
-			var buildingName = names.ElementAt(_random.Next(0, names.Length));
+			var buildingName = names.ElementAt(Random.Next(0, names.Length));
 			return buildingName;
 		}
 	}
