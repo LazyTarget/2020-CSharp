@@ -4,11 +4,13 @@ using DotNet.models;
 
 namespace DotNet.Strategy
 {
-	public class BuildCabinsWhenCloseToPopMaxTurnStrategy : TurnStrategyBase
+	public class BuildBuildingWhenCloseToPopMaxTurnStrategy : TurnStrategyBase
 	{
-		public BuildCabinsWhenCloseToPopMaxTurnStrategy(TurnStrategyBase parent = null) : base(parent)
+		public BuildBuildingWhenCloseToPopMaxTurnStrategy(TurnStrategyBase parent = null) : base(parent)
 		{
 		}
+
+		public string BuildingName { get; set; } = "Cabin";
 
 		public double PopulationPercentageThreshold { get; set; } = 0.805;
 
@@ -30,11 +32,11 @@ namespace DotNet.Strategy
 			var currentPopPercentage = currentPop / (double)currentPopMax;
 
 
-			Console.WriteLine($"BuildCabinsWhenCloseToPopMaxTurnStrategy :: Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
+			Console.WriteLine($"BuildBuildingWhenCloseToPopMaxTurnStrategy :: Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
 
 			if (currentPopPercentage > PopulationPercentageThreshold)
 			{
-				var building = state.AvailableResidenceBuildings.Find(x => x.BuildingName == "Cabin");
+				var building = state.AvailableResidenceBuildings.Find(x => x.BuildingName == BuildingName);
 				if (building.Cost < state.Funds)
 				{
 					var position = randomizer.GetRandomBuildablePosition();

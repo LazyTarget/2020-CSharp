@@ -19,12 +19,18 @@ namespace DotNet
 			_gameState = gameLayer.GetState();
 
 			//_strategy = new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy(_strategy);
-			_strategy = new BuildCabinsWhenCloseToPopMaxTurnStrategy(_strategy);
+			_strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(_strategy)
+			{
+				BuildingName = "Cabin",
+			};
 			_strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(_strategy);
 			_strategy = new AdjustBuildingTemperatureWhenTooHighTurnStrategy(_strategy);
 			_strategy = new AdjustBuildingTemperatureWhenTooLowTurnStrategy(_strategy);
 			_strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(_strategy);
-			_strategy = new BuildCabinOnTurnZeroTurnStrategy(_strategy);
+			_strategy = new BuildBuildingOnTurnZeroTurnStrategy(_strategy)
+			{
+				BuildingName = "ModernApartments",
+			};
 		}
 
 		public void HandleTurn()
