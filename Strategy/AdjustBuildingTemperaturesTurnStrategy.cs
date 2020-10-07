@@ -53,7 +53,7 @@ namespace DotNet.Strategy
 					// Add the trend twice to more quickly react to big temperature changes
 					predictedTrend = predictedTrend.Value * 2;
 
-					outdoorTemp = state.CurrentTemp - predictedTrend.Value;
+					outdoorTemp = state.CurrentTemp + predictedTrend.Value;
 					Debug.WriteLine($"Using prediction for OutdoorTemp: {outdoorTemp}, CurrentTemp: {state.CurrentTemp}");
 				}
 			}
@@ -97,6 +97,12 @@ namespace DotNet.Strategy
 					* blueprint.Emissivity / 1 + 0.5 - building.CurrentPop * 0.04;
 				if (predictedTrend.GetValueOrDefault() > 0)
 				{
+					// Trend is getting hotter
+					// Then reduce energy to save heating resources and to cooldown appartment...
+					energy *= 0.9;
+				}
+				else if (predictedTrend.GetValueOrDefault() < 0)
+				{
 					// Trend is getting colder
 					// Then apply more energy to make sure has enough heating...
 					energy *= 1.1;
@@ -117,17 +123,32 @@ namespace DotNet.Strategy
 				Debug.WriteLine($"Current building energy: \t{building.EffectiveEnergyIn}/{building.RequestedEnergyIn} Mwh");
 				Debug.WriteLine($"New requested energy: \t\t{energy:N3} Mwh");
 
-				if (energy < building.RequestedEnergyIn)
+				if (newTemp < TargetTemperature)
 				{
-					// Should not lower energy if already too cold
-					continue;
+					// Colder than target
+					if (energy < building.RequestedEnergyIn)
+					{
+						// Should not lower energy if already too cold
+						continue;
+					}
+					else { }
+				}
+				else if (newTemp > TargetTemperature)
+				{
+					// Hotter than target
+					if (energy > building.RequestedEnergyIn)
+					{
+						// Should not increase energy if already too hot
+						continue;
+					}
+					else { }
 				}
 
 				if (IsBetween(energy,
 					building.RequestedEnergyIn - AllowedDiffMargin,
 					building.RequestedEnergyIn + AllowedDiffMargin))
 				{
-					// already updated energy
+					// minimal change, wait to update energy (to reduce calls and save money)
 					continue;
 				}
 
