@@ -40,6 +40,10 @@ namespace DotNet
 					gameLayer.Build(position);
 					break;
 
+				case GameActions.Maintenance:
+					gameLayer.Maintenance(position);
+					break;
+
 				case GameActions.Wait:
 					gameLayer.Wait();
 					break;
@@ -62,8 +66,12 @@ namespace DotNet
 				yield return GameActions.StartBuild;
 
 			// If has non-completed buildings, then can build
-			if (state.ResidenceBuildings.Any(x => x.BuildProgress < 100))
+			if (state.GetBuildingsUnderConstruction().Any(x => x.BuildProgress < 100))
 				yield return GameActions.Build;
+
+			// If has completed buildings and they are low on hp, then can do maintenance
+			if (state.ResidenceBuildings.Any(x => x.Health < 45))
+				yield return GameActions.Maintenance;
 
 			if (includeWait)
 				yield return GameActions.Wait;
@@ -84,6 +92,12 @@ namespace DotNet
 		public static IEnumerable<BuiltBuilding> GetBuildingsUnderConstruction(this GameState state)
 		{
 			var buildings = state.GetBuiltBuildings().Where(x => x.BuildProgress < 100);
+			return buildings;
+		}
+
+		public static IEnumerable<BuiltBuilding> GetCompletedBuildings(this GameState state)
+		{
+			var buildings = state.GetBuiltBuildings().Where(x => x.BuildProgress >= 100);
 			return buildings;
 		}
 	}

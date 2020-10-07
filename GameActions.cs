@@ -4,8 +4,10 @@
 	{
 		None = 0,
 
+		Wait,
+
 		StartBuild,
 		Build,
-		Wait,
+		Maintenance,
 	}
 }

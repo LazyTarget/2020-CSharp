@@ -53,6 +53,12 @@ namespace DotNet
 					var building = buildingsUnderConstruction.ElementAt(_random.Next(0, buildingsUnderConstruction.Length));
 					position = building.Position;
 					break;
+
+				case GameActions.Maintenance:
+					var damagedBuildings = _gameState.ResidenceBuildings.Where(x => x.Health < 45).ToArray();
+					var damagedBuilding = damagedBuildings.ElementAt(_random.Next(0, damagedBuildings.Length));
+					position = damagedBuilding.Position;
+					break;
 			}
 
 			_gameLayer.ExecuteAction(action, position, argument);
