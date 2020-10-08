@@ -151,6 +151,180 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			public class DefaultStrategy_CabinStarter_Max10Buildings_WithParksAndMalls : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Mall";
+							c.MaxNumberOfBuildings = 3;
+						})
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 10;
+						})
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class DefaultStrategy_ModernStarter_Max3Buildings : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 3;
+						})
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "ModernApartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class DefaultStrategy_ModernStarter_Max5Buildings : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 5;
+						})
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "ModernApartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class DefaultStrategy_ModernStarter_Max10Buildings : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 10;
+						})
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "ModernApartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class DefaultStrategy_ModernStarter_Max10Buildings_WithParksAndMalls : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Mall";
+							c.MaxNumberOfBuildings = 3;
+						})
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 10;
+						})
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "ModernApartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class DefaultStrategy_ModernStarter_WithParksAndMalls : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Mall";
+							c.MaxNumberOfBuildings = 3;
+						})
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "ModernApartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class DefaultStrategy_ModernStarter_WithMallsAndParks : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Mall";
+							c.MaxNumberOfBuildings = 3;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "ModernApartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
 			public class WithoutStartBuildOnTurnZero : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()

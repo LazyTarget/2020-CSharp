@@ -21,12 +21,12 @@ namespace DotNet.Strategy
 
 		public double PopulationPercentageThreshold { get; set; } = 0.805;
 
-		public int MaxNumberOfBuildings { get; set; } = 10;
+		public int MaxNumberOfResidences { get; set; } = 10;
 
 		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
-			var buildings = state.GetBuiltBuildings().ToArray();
-			if (buildings.Length >= MaxNumberOfBuildings)
+			var buildings = state.GetBuiltBuildings().OfType<BuiltResidenceBuilding>().ToArray();
+			if (buildings.Length >= MaxNumberOfResidences)
 			{
 				// Don't build any more buildings
 				return false;
