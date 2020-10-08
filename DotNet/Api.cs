@@ -203,7 +203,7 @@ namespace DotNet
 
         public async Task<GameReplayResponse> GetReplay(string gameId)
         {
-            var response = await _client.GetAsync("replay?GameId?" + gameId);
+            var response = await _client.GetAsync("replay?GameId=" + gameId);
             response.EnsureSuccessStatusCode();
     
             var result = await response.Content.ReadAsStringAsync();

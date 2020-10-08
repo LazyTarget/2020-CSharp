@@ -139,19 +139,19 @@ namespace DotNet
 			return buildings;
 		}
 
-		public static IEnumerable<BuiltBuilding> GetBuiltBuildings(this GameState state)
+		public static IEnumerable<BuiltBuilding> GetBuiltBuildings(this GameStateResponse state)
 		{
 			var buildings = state.ResidenceBuildings.OfType<BuiltBuilding>().Concat(state.UtilityBuildings);
 			return buildings;
 		}
 
-		public static IEnumerable<BuiltBuilding> GetBuildingsUnderConstruction(this GameState state)
+		public static IEnumerable<BuiltBuilding> GetBuildingsUnderConstruction(this GameStateResponse state)
 		{
 			var buildings = state.GetBuiltBuildings().Where(x => x.BuildProgress < 100);
 			return buildings;
 		}
 
-		public static IEnumerable<BuiltBuilding> GetCompletedBuildings(this GameState state)
+		public static IEnumerable<BuiltBuilding> GetCompletedBuildings(this GameStateResponse state)
 		{
 			var buildings = state.GetBuiltBuildings().Where(x => x.BuildProgress >= 100);
 			return buildings;

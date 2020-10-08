@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DotNet.models;
 using DotNet.Strategy;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,23 @@ namespace DotNet.Tests
 			var gameLayer = new GameLayer(ApiKey);
 			var replay = gameLayer.GetReplay(gameId);
 			Assert.IsNotNull(replay);
+
+			var state = replay.StateUpdates.Last();
+
+			var score = replay.Score;
+			Console.WriteLine($"::Score::");
+			Console.WriteLine($"Final score: {score.FinalScore}");
+			Console.WriteLine($"Co2: {score.TotalCo2}");
+			Console.WriteLine($"Pop: {score.FinalPopulation}");
+			Console.WriteLine($"Happiness: {score.TotalHappiness}");
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine($"::Summary::");
+			Console.WriteLine($"Funds: {state.Funds}");
+			Console.WriteLine($"Buildings: {state.GetCompletedBuildings().Count()}");
+			Console.WriteLine($"Upgrades: {state.GetCompletedBuildings().Sum(x => x.Effects.Count)}");
+			Console.WriteLine();
+			Console.WriteLine();
 
 			foreach (var update in replay.StateUpdates)
 			{
