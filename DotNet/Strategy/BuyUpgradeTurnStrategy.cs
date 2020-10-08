@@ -51,6 +51,13 @@ namespace DotNet.Strategy
 				return false;
 			}
 
+			var resultingFunds = state.Funds - upgrade.Cost;
+			if (resultingFunds < 30000)
+			{
+				// Always leave a good margin on the bank account
+				return false;
+			}
+
 			var position = building.Position;
 			gameLayer.BuyUpgrade(position, upgrade.Name, state.GameId);
 			return true;

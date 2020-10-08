@@ -86,7 +86,7 @@ namespace DotNet
 			Console.WriteLine($"Final score: {score.FinalScore}");
 			Console.WriteLine($"Co2: {score.TotalCo2}");
 			Console.WriteLine($"Pop: {score.FinalPopulation}");
-			Console.WriteLine($"Pop: {score.TotalHappiness}");
+			Console.WriteLine($"Happiness: {score.TotalHappiness}");
 			return score;
 		}
 
