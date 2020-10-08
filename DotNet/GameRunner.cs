@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using DotNet.models;
@@ -119,7 +119,7 @@ namespace DotNet
 					(rb, bp) => new { bp, rb })
 				.Sum(x => x.bp.MaxPop);
 
-			var currentPopPercentage = currentPop / (double)currentPopMax;
+			var currentPopPercentage = currentPopMax > 0 ? currentPop / (double)currentPopMax : 0;
 
 			Debug.WriteLine($"Begin New Turn :: Turn={state.Turn}, Funds={state.Funds}, Temp={state.CurrentTemp}, Pop: {currentPop}/{currentPopMax} ({currentPopPercentage:P2})");
 		}

@@ -22,18 +22,13 @@ namespace DotNet
 
 			if (strategy == null)
 			{
-				//_strategy = new BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy(_strategy);
-				//_strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(_strategy)
-				//{
-				//	BuildingName = "Cabin",
-				//};
-				_strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(_strategy);
-				_strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(_strategy);
-				_strategy = new AdjustBuildingTemperaturesTurnStrategy(_strategy);
-				_strategy = new BuildBuildingOnTurnZeroTurnStrategy(_strategy)
-				{
-					BuildingName = "ModernApartments",
-				};
+				_strategy = TurnStrategyBase
+						.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<BuildBuildingOnTurnZeroTurnStrategy>();
 			}
 			else
 			{
@@ -53,7 +48,7 @@ namespace DotNet
 			//var action = GetRandomAction();
 			//HandleAction(action);
 
-			Debug.WriteLine("No strategy executed, invoking Wait as fallback");
+			//Debug.WriteLine("No strategy executed, invoking Wait as fallback");
 			_gameLayer.ExecuteAction(GameActions.Wait);
 		}
 

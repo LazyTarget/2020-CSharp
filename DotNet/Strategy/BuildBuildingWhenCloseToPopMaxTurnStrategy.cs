@@ -34,8 +34,8 @@ namespace DotNet.Strategy
 				.Join(state.AvailableResidenceBuildings, ok => ok.BuildingName, ik => ik.BuildingName,
 					(rb, bp) => new {bp, rb})
 				.Sum(x => x.bp.MaxPop);
-			
-			var currentPopPercentage = currentPop / (double)currentPopMax;
+
+			var currentPopPercentage = currentPopMax > 0 ? currentPop / (double)currentPopMax : 0;
 
 
 			Debug.WriteLine($"BuildBuildingWhenCloseToPopMaxTurnStrategy :: Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
