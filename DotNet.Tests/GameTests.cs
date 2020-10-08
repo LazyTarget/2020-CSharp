@@ -171,6 +171,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Map_Gothenburg")]
 			public class Gothenburg_1 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -196,6 +197,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Map_Gothenburg")]
 			public class Gothenburg_2 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -221,6 +223,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Map_Gothenburg")]
 			public class Gothenburg_3 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -246,6 +249,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Map_Gothenburg")]
 			public class Gothenburg_4 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -271,6 +275,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Map_Kiruna")]
 			public class Kiruna_1 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -296,6 +301,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Map_Kiruna")]
 			public class Kiruna_2 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -321,6 +327,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Map_Kiruna")]
 			public class Kiruna_3 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -346,6 +353,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Map_Kiruna")]
 			public class Kiruna_4 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -591,6 +599,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Singleton")]
 			public class SingletonModernApartments : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -601,6 +610,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Singleton")]
 			public class SingletonCabin : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -611,6 +621,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Singleton")]
 			public class SingletonEnvironmentalHouse : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -621,6 +632,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Singleton")]
 			public class SingletonHighRise : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -631,6 +643,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			[TestCategory("Singleton")]
 			public class SingletonLuxuryResidence : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
