@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using DotNet.models;
 using DotNet.Strategy;
+using Microsoft.Extensions.Logging;
 
 namespace DotNet
 {
@@ -10,12 +11,14 @@ namespace DotNet
 	{
 		#region Static
 
-		public static GameRunner New(string apiKey, string map)
+		public static GameRunner New(string apiKey, string map, ILoggerFactory loggerFactory)
 		{
 			var runner = new GameRunner
 			{
 				GameLayer = new GameLayer(apiKey),
+				LoggerFactory = loggerFactory,
 			};
+			runner._logger = loggerFactory.CreateLogger<GameRunner>();
 
 			Console.WriteLine($"New game: {map}");
 			var gameId = runner.GameLayer.NewGame(map);
@@ -25,12 +28,14 @@ namespace DotNet
 			return runner;
 		}
 
-		public static GameRunner Resume(string apiKey, string gameId)
+		public static GameRunner Resume(string apiKey, string gameId, ILoggerFactory loggerFactory)
 		{
 			var runner = new GameRunner
 			{
 				GameLayer = new GameLayer(apiKey),
+				LoggerFactory = loggerFactory,
 			};
+			runner._logger = loggerFactory.CreateLogger<GameRunner>();
 
 			runner.GameLayer.GetNewGameInfo(gameId);
 
@@ -47,6 +52,9 @@ namespace DotNet
 		#endregion Static
 
 		private GameLayer GameLayer;
+
+		private ILogger _logger;
+		public ILoggerFactory LoggerFactory;
 
 		public ScoreResponse Run(TurnStrategyBase strategy = null)
 		{

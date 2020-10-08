@@ -1,8 +1,13 @@
 using System;
 using System.Diagnostics;
+using System.Text;
+using DotNet.Logging;
 using DotNet.Strategy;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 [assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 
 namespace DotNet.Tests
@@ -14,6 +19,7 @@ namespace DotNet.Tests
 		protected virtual string Map { get; set; }
 
 		private GameRunner _runner;
+		private StringBuilder _output;
 
 
 		protected RandomizerTests()
@@ -40,10 +46,16 @@ namespace DotNet.Tests
 		public void Cleanup()
 		{
 			_runner?.EndGame();
+
+			var fullLog = _output.ToString();
+			Debug.WriteLine(fullLog);
 		}
 
 		protected virtual GameRunner GetRunner(string map = null)
 		{
+			if (_runner != null)
+				return _runner;
+
 			map ??= Map;
 			if (string.IsNullOrWhiteSpace(map))
 			{
@@ -51,7 +63,11 @@ namespace DotNet.Tests
 			}
 			try
 			{
-				var runner = GameRunner.New(ApiKey, map);
+				_output = new StringBuilder();
+				var loggerFactory = LoggerFactory.Create(c => c
+					.AddProvider(new InMemoryLoggerProvider(_output)));
+
+				var runner = GameRunner.New(ApiKey, map, loggerFactory);
 				_runner = runner;
 				return runner;
 			}

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using DotNet.models;
+using Microsoft.Extensions.Logging;
 
 
 namespace DotNet
@@ -15,6 +16,10 @@ namespace DotNet
 
         public static void Main(string[] args)
         {
+            var loggerFactory = LoggerFactory.Create(c => c
+                .AddConsole()
+                .AddDebug());
+
             // Init GameLayer
             var apiKey = args.ElementAtOrDefault(0) ?? ApiKey;
             while (string.IsNullOrWhiteSpace(apiKey))
@@ -29,11 +34,11 @@ namespace DotNet
             var gameId = args.ElementAtOrDefault(1);
             if (gameId?.ToLower() == "new")
             {
-	            runner = GameRunner.New(apiKey, Map);
+	            runner = GameRunner.New(apiKey, Map, loggerFactory);
             }
             else
             {
-	            runner = GameRunner.Resume(apiKey, gameId);
+	            runner = GameRunner.Resume(apiKey, gameId, loggerFactory);
             }
 
             var score = runner.Run();
