@@ -65,6 +65,8 @@ namespace DotNet
 				foreach (var message in GameLayer.GetState().Messages)
 				{
 					Console.WriteLine(message);
+					if (Debugger.IsAttached)
+						Debug.WriteLine(message);
 				}
 
 				foreach (var error in GameLayer.GetState().Errors)

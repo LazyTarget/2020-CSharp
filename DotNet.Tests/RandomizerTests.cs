@@ -185,6 +185,22 @@ namespace DotNet.Tests
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
+		[TestMethod]
+		public void WithOutStartBuildOnTurnZero()
+		{
+			var strategy = TurnStrategyBase
+				.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+				.Append<BuyUpgradeTurnStrategy>()
+				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+				.Append<AdjustBuildingTemperaturesTurnStrategy>();
+				//.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = "Cabin");
+
+			var score = _runner.Run(strategy);
+			Assert.IsTrue(score.FinalScore > 0);
+		}
+
+
 		[TestClass]
 		public class training1Map : RandomizerTests
 		{

@@ -51,7 +51,8 @@ namespace DotNet.Strategy
 
 			Debug.WriteLine($"BuildBuildingWhenCloseToPopMaxTurnStrategy :: Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
 
-			if (currentPopPercentage > PopulationPercentageThreshold)
+			if (currentPopPercentage > PopulationPercentageThreshold || 
+			    buildings.Length < 1)
 			{
 				var position = randomizer.GetRandomBuildablePosition();
 				if (position == null)
