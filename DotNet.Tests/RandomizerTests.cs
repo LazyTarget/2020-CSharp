@@ -65,6 +65,7 @@ namespace DotNet.Tests
 
 			var strategy = TurnStrategyBase
 				.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c => c.BuildingName = buildingName)
+				.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new [] { "Playground" })
 				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 				.Append<AdjustBuildingTemperaturesTurnStrategy>()
