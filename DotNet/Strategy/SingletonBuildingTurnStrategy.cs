@@ -7,13 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace DotNet.Strategy
 {
-	public class BuildBuildingOnTurnZeroTurnStrategy : TurnStrategyBase
+	public class SingletonBuildingTurnStrategy : TurnStrategyBase
 	{
-		public BuildBuildingOnTurnZeroTurnStrategy() : base()
+		public SingletonBuildingTurnStrategy() : base()
 		{
 		}
 
-		public BuildBuildingOnTurnZeroTurnStrategy(TurnStrategyBase parent) : base(parent)
+		public SingletonBuildingTurnStrategy(TurnStrategyBase parent) : base(parent)
 		{
 		}
 
@@ -21,7 +21,8 @@ namespace DotNet.Strategy
 
 		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
-			if (state.Turn != 0)
+			var currentBuildingCount = state.GetBuiltBuildings().Count();
+			if (currentBuildingCount > 0)
 				return false;
 
 			var position = randomizer.GetRandomBuildablePosition();

@@ -106,7 +106,7 @@ namespace DotNet.Tests
 				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 				.Append<AdjustBuildingTemperaturesTurnStrategy>()
-				.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = "Cabin");
+				.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin");
 
 			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
@@ -125,7 +125,7 @@ namespace DotNet.Tests
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
+			strategy = new SingletonBuildingTurnStrategy(strategy)
 			{
 				BuildingName = "Cabin",
 			};
@@ -147,7 +147,7 @@ namespace DotNet.Tests
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
+			strategy = new SingletonBuildingTurnStrategy(strategy)
 			{
 				BuildingName = "Cabin",
 			};
@@ -169,7 +169,7 @@ namespace DotNet.Tests
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
+			strategy = new SingletonBuildingTurnStrategy(strategy)
 			{
 				BuildingName = "Cabin",
 			};
@@ -191,7 +191,7 @@ namespace DotNet.Tests
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
+			strategy = new SingletonBuildingTurnStrategy(strategy)
 			{
 				BuildingName = "Cabin",
 			};
@@ -213,7 +213,7 @@ namespace DotNet.Tests
 			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
 			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
+			strategy = new SingletonBuildingTurnStrategy(strategy)
 			{
 				BuildingName = "Cabin",
 			};
@@ -231,7 +231,7 @@ namespace DotNet.Tests
 				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 				.Append<AdjustBuildingTemperaturesTurnStrategy>();
-				//.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = "Cabin");
+				//.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin");
 
 			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
@@ -300,11 +300,27 @@ namespace DotNet.Tests
 						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 						.Append<AdjustBuildingTemperaturesTurnStrategy>();
-					//.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = "Cabin");
+						//.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin");
 					return strategy;
 				}
 			}
-			
+
+			[TestClass]
+			public class SingletonCabin : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						//.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin");
+					return strategy;
+				}
+			}
+
 			#endregion Strategies
 		}
 	}

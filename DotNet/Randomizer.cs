@@ -29,7 +29,7 @@ namespace DotNet
 						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 						.Append<AdjustBuildingTemperaturesTurnStrategy>()
-						.Append<BuildBuildingOnTurnZeroTurnStrategy>();
+						.Append<SingletonBuildingTurnStrategy>();
 			}
 			else
 			{
