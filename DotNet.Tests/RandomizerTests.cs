@@ -69,7 +69,7 @@ namespace DotNet.Tests
 				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 				.Append<AdjustBuildingTemperaturesTurnStrategy>()
-				.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = buildingName);
+				.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = "Cabin");
 
 			var score = _runner.Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
@@ -90,7 +90,7 @@ namespace DotNet.Tests
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = buildingName,
+				BuildingName = "Cabin",
 			};
 
 			var score = _runner.Run(strategy);
@@ -112,7 +112,7 @@ namespace DotNet.Tests
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = buildingName,
+				BuildingName = "Cabin",
 			};
 
 			var score = _runner.Run(strategy);
@@ -134,7 +134,7 @@ namespace DotNet.Tests
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = buildingName,
+				BuildingName = "Cabin",
 			};
 
 			var score = _runner.Run(strategy);
@@ -156,7 +156,7 @@ namespace DotNet.Tests
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = buildingName,
+				BuildingName = "Cabin",
 			};
 
 			var score = _runner.Run(strategy);
@@ -178,7 +178,7 @@ namespace DotNet.Tests
 			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
 			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
 			{
-				BuildingName = buildingName,
+				BuildingName = "Cabin",
 			};
 
 			var score = _runner.Run(strategy);
