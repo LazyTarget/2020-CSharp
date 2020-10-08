@@ -4,6 +4,7 @@ using System.Linq;
 using DotNet.models;
 using DotNet.Strategy;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DotNet
 {
@@ -13,29 +14,25 @@ namespace DotNet
 
 		public static GameRunner New(string apiKey, string map, ILoggerFactory loggerFactory)
 		{
-			var runner = new GameRunner
+			var runner = new GameRunner(loggerFactory)
 			{
 				GameLayer = new GameLayer(apiKey),
-				LoggerFactory = loggerFactory,
 			};
-			runner._logger = loggerFactory.CreateLogger<GameRunner>();
 
-			Console.WriteLine($"New game: {map}");
+			runner._logger.LogInformation($"New game: {map}");
 			var gameId = runner.GameLayer.NewGame(map);
 
-			Console.WriteLine($"Starting game: {gameId}");
+			runner._logger.LogInformation($"Starting game: {gameId}");
 			runner.GameLayer.StartGame(gameId);
 			return runner;
 		}
 
 		public static GameRunner Resume(string apiKey, string gameId, ILoggerFactory loggerFactory)
 		{
-			var runner = new GameRunner
+			var runner = new GameRunner(loggerFactory)
 			{
 				GameLayer = new GameLayer(apiKey),
-				LoggerFactory = loggerFactory,
-			};
-			runner._logger = loggerFactory.CreateLogger<GameRunner>();
+			};;
 
 			runner.GameLayer.GetNewGameInfo(gameId);
 
@@ -43,18 +40,23 @@ namespace DotNet
 
 			var state = runner.GameLayer.GetState();
 			if (!string.IsNullOrWhiteSpace(gameId))
-				Console.WriteLine($"Resuming game specified game: {gameId} on turn {state.Turn}");
+				runner._logger.LogInformation($"Resuming game specified game: {gameId} on turn {state.Turn}");
 			else
-				Console.WriteLine($"Resuming previous game: {state.GameId} on turn {state.Turn}");
+				runner._logger.LogInformation($"Resuming previous game: {state.GameId} on turn {state.Turn}");
 			return runner;
 		}
 
 		#endregion Static
 
 		private GameLayer GameLayer;
+		private readonly ILogger _logger;
+		private readonly ILoggerFactory _loggerFactory;
 
-		private ILogger _logger;
-		public ILoggerFactory LoggerFactory;
+		public GameRunner(ILoggerFactory loggerFactory)
+		{
+			_loggerFactory = loggerFactory ?? new NullLoggerFactory();
+			_logger = _loggerFactory?.CreateLogger<GameRunner>();
+		}
 
 		public ScoreResponse Run(TurnStrategyBase strategy = null)
 		{
