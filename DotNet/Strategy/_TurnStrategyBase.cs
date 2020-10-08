@@ -1,10 +1,11 @@
-﻿using DotNet.Interfaces;
+﻿using System;
+using DotNet.Interfaces;
 
 namespace DotNet.Strategy
 {
 	public abstract class TurnStrategyBase
 	{
-		private readonly TurnStrategyBase _parent;
+		private TurnStrategyBase _parent;
 
 		protected TurnStrategyBase(TurnStrategyBase parent = null)
 		{
@@ -20,5 +21,23 @@ namespace DotNet.Strategy
 		}
 
 		protected abstract bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state);
+
+
+		public static T Create<T>(Action<T> configure = null)
+			where T : TurnStrategyBase, new()
+		{
+			var strategy = new T();
+			configure?.Invoke(strategy);
+			return strategy;
+		}
+
+		public T Append<T>(Action<T> configure = null)
+			where T : TurnStrategyBase, new()
+		{
+			var strategy = new T();
+			strategy._parent = this;
+			configure?.Invoke(strategy);
+			return strategy;
+		}
 	}
 }

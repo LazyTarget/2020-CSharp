@@ -7,7 +7,11 @@ namespace DotNet.Strategy
 {
 	public class BuildBuildingWhenCloseToPopMaxTurnStrategy : TurnStrategyBase
 	{
-		public BuildBuildingWhenCloseToPopMaxTurnStrategy(TurnStrategyBase parent = null) : base(parent)
+		public BuildBuildingWhenCloseToPopMaxTurnStrategy() : base()
+		{
+		}
+
+		public BuildBuildingWhenCloseToPopMaxTurnStrategy(TurnStrategyBase parent) : base(parent)
 		{
 		}
 

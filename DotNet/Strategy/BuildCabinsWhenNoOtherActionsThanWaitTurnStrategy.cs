@@ -4,7 +4,11 @@ namespace DotNet.Strategy
 {
 	public class BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy : TurnStrategyBase
 	{
-		public BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy(TurnStrategyBase parent = null) : base(parent)
+		public BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy() : base()
+		{
+		}
+
+		public BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy(TurnStrategyBase parent) : base(parent)
 		{
 		}
 

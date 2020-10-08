@@ -63,18 +63,12 @@ namespace DotNet.Tests
 		{
 			var buildingName = "Apartments";
 
-			TurnStrategyBase strategy = null;
-			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
-			{
-				BuildingName = buildingName,
-			};
-			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
-			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
-			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new BuildBuildingOnTurnZeroTurnStrategy(strategy)
-			{
-				BuildingName = buildingName,
-			};
+			var strategy = TurnStrategyBase
+				.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c => c.BuildingName = buildingName)
+				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+				.Append<AdjustBuildingTemperaturesTurnStrategy>()
+				.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = buildingName);
 
 			var score = _runner.Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);

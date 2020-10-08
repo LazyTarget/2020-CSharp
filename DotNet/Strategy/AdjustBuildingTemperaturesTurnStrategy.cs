@@ -14,7 +14,11 @@ namespace DotNet.Strategy
 		private const double _degreesPerExcessMwh = 0.75;
 		private const int _adjustCost = 150;
 
-		public AdjustBuildingTemperaturesTurnStrategy(TurnStrategyBase parent = null) : base(parent)
+		public AdjustBuildingTemperaturesTurnStrategy() : base()
+		{
+		}
+
+		public AdjustBuildingTemperaturesTurnStrategy(TurnStrategyBase parent) : base(parent)
 		{
 		}
 

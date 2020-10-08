@@ -6,7 +6,11 @@ namespace DotNet.Strategy
 {
 	public class BuildWhenHasBuildingsUnderConstructionTurnStrategy : TurnStrategyBase
 	{
-		public BuildWhenHasBuildingsUnderConstructionTurnStrategy(TurnStrategyBase parent = null) : base(parent)
+		public BuildWhenHasBuildingsUnderConstructionTurnStrategy() : base()
+		{
+		}
+
+		public BuildWhenHasBuildingsUnderConstructionTurnStrategy(TurnStrategyBase parent) : base(parent)
 		{
 		}
 

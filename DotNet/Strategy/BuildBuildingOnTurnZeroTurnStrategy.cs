@@ -4,7 +4,11 @@ namespace DotNet.Strategy
 {
 	public class BuildBuildingOnTurnZeroTurnStrategy : TurnStrategyBase
 	{
-		public BuildBuildingOnTurnZeroTurnStrategy(TurnStrategyBase parent = null) : base(parent)
+		public BuildBuildingOnTurnZeroTurnStrategy() : base()
+		{
+		}
+
+		public BuildBuildingOnTurnZeroTurnStrategy(TurnStrategyBase parent) : base(parent)
 		{
 		}
 

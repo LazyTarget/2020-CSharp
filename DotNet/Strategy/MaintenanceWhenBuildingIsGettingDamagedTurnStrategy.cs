@@ -6,7 +6,11 @@ namespace DotNet.Strategy
 {
 	public class MaintenanceWhenBuildingIsGettingDamagedTurnStrategy : TurnStrategyBase
 	{
-		public MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(TurnStrategyBase parent = null) : base(parent)
+		public MaintenanceWhenBuildingIsGettingDamagedTurnStrategy() : base()
+		{
+		}
+
+		public MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(TurnStrategyBase parent) : base(parent)
 		{
 		}
 
