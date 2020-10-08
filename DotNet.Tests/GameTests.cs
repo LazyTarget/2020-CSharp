@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using DotNet.Logging;
 using DotNet.Strategy;
@@ -322,19 +323,49 @@ namespace DotNet.Tests
 			{
 				protected override TurnStrategyBase GetStrategy()
 				{
-					var strategy = StrategyBuilder()
-						//.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
-						.Append<BuyUpgradeTurnStrategy>()
-						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
-						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
-						.Append<AdjustBuildingTemperaturesTurnStrategy>()
-						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
-						.Compile();
+					var strategy = BuildSingletonStrategy("Cabin");
 					return strategy;
 				}
 			}
 
 			#endregion Strategies
+
+
+			#region Helpers
+
+			protected TurnStrategyBase BuildSingletonStrategy(string buildingName)
+			{
+				var strategy = StrategyBuilder()
+					//.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+					.Append<BuyUpgradeTurnStrategy>()
+					.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+					.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+					.Append<AdjustBuildingTemperaturesTurnStrategy>()
+					.Append<SingletonBuildingTurnStrategy>(
+						c => c.BuildingName = buildingName
+						, predicate: (state) => VerifyBuildingIsAvailable(state, buildingName)
+						//, callback: VerifyStrategySucceeded
+					)
+					.Compile();
+				return strategy;
+			}
+
+			protected bool VerifyBuildingIsAvailable(GameState state, string buildingName)
+			{
+				var building = state.AvailableResidenceBuildings.FirstOrDefault(x => x.BuildingName == buildingName);
+				if (building == null)
+				{
+					Assert.Inconclusive("Building is not available from start");
+				}
+				return true;
+			}
+
+			protected void VerifyStrategySucceeded(GameState state, bool result, bool globalResult)
+			{
+				Assert.IsTrue(result);
+			}
+
+			#endregion
 		}
 	}
 }

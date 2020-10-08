@@ -11,7 +11,7 @@ namespace DotNet.Strategy
 		protected ILogger Logger { get; private set; }
 
 		private Func<GameState, bool> _predicate;
-		private Action<GameState, bool> _callback;
+		private Action<GameState, bool, bool> _callback;
 
 		protected TurnStrategyBase(TurnStrategyBase parent = null)
 		{
@@ -27,16 +27,17 @@ namespace DotNet.Strategy
 				result = TryExecuteTurn(randomizer, gameLayer, state);
 			}
 
-			if (!result && _parent != null)
+			var globalResult = result;
+			if (!globalResult && _parent != null)
 			{
 				// Could not execute, continue with the parent
-				result = _parent.TryExecuteStrategy(randomizer, gameLayer, state);
+				globalResult = _parent.TryExecuteStrategy(randomizer, gameLayer, state);
 			}
 
 			// Make a callback that the strategy has succeeded
 			if (_callback != null)
 			{
-				_callback?.Invoke(state, result);
+				_callback?.Invoke(state, result, globalResult);
 			}
 			return result;
 		}
@@ -74,7 +75,7 @@ namespace DotNet.Strategy
 				_loggerFactory = loggerFactory;
 			}
 
-			public StrategyBuilder Append<T>(Action<T> configureStrategy = null, Func<GameState, bool> predicate = null, Action<GameState, bool> callback = null)
+			public StrategyBuilder Append<T>(Action<T> configureStrategy = null, Func<GameState, bool> predicate = null, Action<GameState, bool, bool> callback = null)
 				where T : TurnStrategyBase, new()
 			{
 				var strategy = new T();
