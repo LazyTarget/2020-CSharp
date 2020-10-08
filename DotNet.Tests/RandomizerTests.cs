@@ -14,8 +14,7 @@ namespace DotNet.Tests
 		private GameRunner _runner;
 
 
-		[TestInitialize]
-		public void Initialize()
+		protected RandomizerTests()
 		{
 			var configuration = new ConfigurationBuilder()
 				.AddJsonFile("appsettings.json", true, true)
@@ -25,7 +24,16 @@ namespace DotNet.Tests
 			ApiKey = configuration.GetValue<string>("ApiKey");
 			if (string.IsNullOrWhiteSpace(ApiKey))
 				throw new ArgumentNullException(nameof(ApiKey));
+		}
 
+		[TestInitialize]
+		public void Initialize()
+		{
+			TestInitialize();
+		}
+
+		protected virtual void TestInitialize()
+		{
 			_runner = InitRunner();
 		}
 
@@ -35,13 +43,16 @@ namespace DotNet.Tests
 			_runner?.EndGame();
 		}
 
-		private GameRunner InitRunner()
+		private GameRunner InitRunner(string map = null)
 		{
-			if (string.IsNullOrWhiteSpace(Map))
-				throw new ArgumentNullException(nameof(Map));
+			map ??= Map;
+			if (string.IsNullOrWhiteSpace(map))
+			{
+				Assert.Inconclusive("Missing Map-argument!");
+			}
 			try
 			{
-				var runner = GameRunner.New(ApiKey, Map);
+				var runner = GameRunner.New(ApiKey, map);
 				return runner;
 			}
 			catch (Exception ex)
@@ -218,12 +229,19 @@ namespace DotNet.Tests
 		{
 			protected abstract TurnStrategyBase GetStrategy();
 
+			protected override void TestInitialize()
+			{
+				// Don't run InitRunner in TestInitialize
+				// Instead run it in each test
+			}
 
 			[TestMethod]
 			public virtual void training1()
 			{
 				Map = "training1";
 				var strategy = GetStrategy();
+
+				_runner = InitRunner();
 				var score = _runner.Run(strategy);
 				Assert.IsTrue(score.FinalScore > 0);
 			}
@@ -233,6 +251,8 @@ namespace DotNet.Tests
 			{
 				Map = "training2";
 				var strategy = GetStrategy();
+
+				_runner = InitRunner();
 				var score = _runner.Run(strategy);
 				Assert.IsTrue(score.FinalScore > 0);
 			}
