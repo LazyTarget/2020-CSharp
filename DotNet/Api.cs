@@ -195,7 +195,7 @@ namespace DotNet
         public async Task<ScoreResponse> GetScore(string gameId)
         {
             //Client.DefaultRequestHeaders.Add("x-api-key", apiKey);
-            var response = await _client.GetAsync("score?GameId?" + gameId);
+            var response = await _client.GetAsync("score?GameId=" + gameId);
 
             var result = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ScoreResponse>(result);
@@ -212,7 +212,7 @@ namespace DotNet
 
         public async Task<GameState> GetGameInfo(string gameId)
         {
-            var response = await _client.GetAsync("gameInfo?GameId?" + gameId);
+            var response = await _client.GetAsync("gameInfo?GameId=" + gameId);
 
             var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
@@ -230,7 +230,7 @@ namespace DotNet
 
         public async Task<GameStateResponse> GetGameState(string gameId)
         {
-            var response = await _client.GetAsync("gameState?GameId?" + gameId);
+            var response = await _client.GetAsync("gameState?GameId=" + gameId);
 
             var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
@@ -266,7 +266,7 @@ namespace DotNet
 
         public async Task EndGame(string gameId = null)
         {
-            var response = await _client.GetAsync("end?GameId?" + gameId);
+            var response = await _client.GetAsync("end?GameId=" + gameId);
             Console.WriteLine(await response.Content.ReadAsStringAsync());
 
 
