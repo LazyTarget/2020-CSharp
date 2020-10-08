@@ -63,7 +63,7 @@ namespace DotNet.Strategy
 					predictedTrend = predictedTrend.Value * 2;
 
 					outdoorTemp = state.CurrentTemp + predictedTrend.Value;
-					Logger.LogTrace($"Using prediction for OutdoorTemp: {outdoorTemp}, CurrentTemp: {state.CurrentTemp}");
+					Logger.LogTrace($"Using prediction for OutdoorTemp: {outdoorTemp:N3}, CurrentTemp: {state.CurrentTemp:N1} (weighted trend: {predictedTrend:N3})");
 				}
 			}
 
@@ -114,8 +114,17 @@ namespace DotNet.Strategy
 				}
 
 
-				var energy= blueprint.BaseEnergyNeed + (building.Temperature - outdoorTemp)
+				var energyOld = blueprint.BaseEnergyNeed + (building.Temperature - outdoorTemp)
 					* blueprint.Emissivity / 1 + 0.5 - building.CurrentPop * 0.04;
+				
+				var energyNew = (TargetTemperature - building.Temperature
+				              + blueprint.BaseEnergyNeed * _degreesPerExcessMwh
+				              - _degreesPerPop * building.CurrentPop
+				              + building.Temperature * blueprint.Emissivity
+				              - outdoorTemp * blueprint.Emissivity) / _degreesPerExcessMwh;
+
+				var energy = energyOld;
+
 				if (predictedTrend.GetValueOrDefault() > 0)
 				{
 					// Trend is getting hotter
@@ -148,7 +157,8 @@ namespace DotNet.Strategy
 				Logger.LogTrace($"Next building temp: \t\t\t{newTemp:N3}");
 				Logger.LogTrace($"Predicted New Temp: \t\t\t{predictedNewTemp:N3}");
 				Logger.LogTrace($"Current building energy: \t{building.EffectiveEnergyIn}/{building.RequestedEnergyIn} Mwh");
-				Logger.LogTrace($"New requested energy: \t\t{energy:N3} Mwh");
+				Logger.LogTrace($"New requested energy: \t\t{energyOld:N3} Mwh");
+				Logger.LogTrace($"New requested energy v2: \t{energyNew:N3} Mwh");
 
 				if (newTemp < TargetTemperature)
 				{
@@ -182,7 +192,7 @@ namespace DotNet.Strategy
 
 				if (state.Funds < _adjustCost)
 				{
-					Logger.LogWarning($"Wanted to apply energy '{energy}' to building at {building.Position}, but has insufficient funds");
+					Logger.LogWarning($"Wanted to apply energy '{energy:N1}' to building at {building.Position}, but has insufficient funds ({state.Funds})");
 					continue;
 				}
 
