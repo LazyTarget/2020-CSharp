@@ -150,6 +150,15 @@ namespace DotNet.Tests
 				AssertScore(score);
 			}
 
+			[TestMethod]
+			[TestCategory("Map_Kiruna")]
+			public virtual void Map__Kiruna()
+			{
+				Map = "_Kiruna";
+				var score = Run(Map);
+				AssertScore(score);
+			}
+
 			#region Strategies
 
 			[TestClass]
