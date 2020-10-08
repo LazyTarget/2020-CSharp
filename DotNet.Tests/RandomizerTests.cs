@@ -14,7 +14,7 @@ namespace DotNet.Tests
 	[TestClass]
 	public abstract class RandomizerTests
 	{
-		private string ApiKey;
+		private string ApiKey = AssemblySetup.ApiKey;
 		protected virtual string Map { get; set; }
 
 		private GameRunner _runner;
@@ -25,15 +25,6 @@ namespace DotNet.Tests
 
 		protected RandomizerTests()
 		{
-			var configuration = new ConfigurationBuilder()
-				.AddJsonFile("appsettings.json", true, true)
-				.AddEnvironmentVariables("CONSIDITION_")
-				.AddUserSecrets<RandomizerTests>(true)
-				.Build();
-			ApiKey = configuration.GetValue<string>("ApiKey");
-			if (string.IsNullOrWhiteSpace(ApiKey))
-				throw new ArgumentNullException(nameof(ApiKey));
-
 			_loggerFactory = new Lazy<ILoggerFactory>(() =>
 			{
 				_output = new StringBuilder();
