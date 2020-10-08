@@ -45,24 +45,23 @@ namespace DotNet.Strategy
 		protected abstract bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state);
 
 
+		public override string ToString()
+		{
+			var str = $"{GetType().Name}";
+			if (_parent != null)
+			{
+				str += Environment.NewLine + "\t => ";
+				str += _parent.ToString();
+			}
+			return str;
+		}
+
+
 		public static StrategyBuilder Build(ILoggerFactory loggerFactory)
 		{
 			var builder = new StrategyBuilder(loggerFactory);
 			return builder;
 		}
-
-		public T Append<T>(Action<T> configure = null)
-			where T : TurnStrategyBase, new()
-		{
-			var strategy = new T();
-			strategy._parent = this;
-			strategy._loggerFactory = _loggerFactory;
-			strategy.Logger = _loggerFactory.CreateLogger<T>();
-
-			configure?.Invoke(strategy);
-			return strategy;
-		}
-
 
 		public class StrategyBuilder
 		{

@@ -11,6 +11,7 @@ namespace DotNet
 	{
 		public readonly Random Random = new Random();
 
+		private readonly ILogger _logger;
 		private readonly IGameLayer _gameLayer;
 		private readonly GameState _gameState;
 		private readonly TurnStrategyBase _strategy;
@@ -19,6 +20,7 @@ namespace DotNet
 		{
 			_gameLayer = gameLayer;
 			_gameState = gameLayer.GetState();
+			_logger = loggerFactory.CreateLogger<Randomizer>();
 
 			if (strategy == null)
 			{
@@ -35,6 +37,7 @@ namespace DotNet
 			{
 				_strategy = strategy;
 			}
+			_logger.LogInformation($"Strategy: {Environment.NewLine + _strategy}");
 		}
 
 		public void HandleTurn()

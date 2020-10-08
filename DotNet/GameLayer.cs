@@ -82,7 +82,8 @@ namespace DotNet
         ///
         public void Wait(string gameId = null)
         {
-            _gameState.UpdateState(_api.Wait(gameId).Result);
+            var state = _api.Wait(gameId).Result;
+            _gameState.UpdateState(state);
         }
 
         ///  <summary> Buys an upgrade on the specific building.</summary>
