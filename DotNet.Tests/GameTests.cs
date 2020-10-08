@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-[assembly: Parallelize(Workers = 3, Scope = ExecutionScope.MethodLevel)]
+//[assembly: Parallelize(Workers = 2, Scope = ExecutionScope.MethodLevel)]
 
 namespace DotNet.Tests
 {
@@ -23,33 +23,29 @@ namespace DotNet.Tests
 		private GameRunner _runner;
 		private StringBuilder _output;
 
-		private readonly Lazy<ILoggerFactory> _loggerFactory;
+		private readonly ILoggerFactory _loggerFactory;
 		private readonly ILogger _logger;
 
 
 		protected GameTests()
 		{
-			_loggerFactory = new Lazy<ILoggerFactory>(() =>
+			var loggerFilterOptions = new LoggerFilterOptions
 			{
-				var loggerFilterOptions = new LoggerFilterOptions
-				{
-					MinLevel = LogLevel.Information,
-				};
-				var providers = new List<ILoggerProvider>();
-				if (Debugger.IsAttached)
-				{
-					providers.Add(new DebugLoggerProvider());
-					loggerFilterOptions.MinLevel = LogLevel.Debug;
-				}
-				else
-				{
-					_output = new StringBuilder();
-					providers.Add(new InMemoryLoggerProvider(_output));
-				}
-				var loggerFactory = new LoggerFactory(providers, loggerFilterOptions);
-				return loggerFactory;
-			});
-			_logger = _loggerFactory.Value.CreateLogger(GetType());
+				MinLevel = LogLevel.Information,
+			};
+			var providers = new List<ILoggerProvider>();
+			if (Debugger.IsAttached)
+			{
+				providers.Add(new DebugLoggerProvider());
+				loggerFilterOptions.MinLevel = LogLevel.Debug;
+			}
+			else
+			{
+				_output = new StringBuilder();
+				providers.Add(new InMemoryLoggerProvider(_output));
+			}
+			_loggerFactory = new LoggerFactory(providers, loggerFilterOptions);
+			_logger = _loggerFactory.CreateLogger(GetType());
 		}
 
 		[TestInitialize]
@@ -69,6 +65,7 @@ namespace DotNet.Tests
 			if (!string.IsNullOrWhiteSpace(fullLog))
 			{
 				Microsoft.VisualStudio.TestTools.UnitTesting.Logging.Logger.LogMessage(fullLog);
+				//Debug.WriteLine(fullLog);
 			}
 		}
 
@@ -85,7 +82,7 @@ namespace DotNet.Tests
 			try
 			{
 				_logger.LogInformation("Initializing runner");
-				var runner = GameRunner.New(ApiKey, map, _loggerFactory.Value);
+				var runner = GameRunner.New(ApiKey, map, _loggerFactory);
 				_runner = runner;
 				return runner;
 			}
@@ -237,7 +234,7 @@ namespace DotNet.Tests
 
 			protected virtual TurnStrategyBase.StrategyBuilder StrategyBuilder()
 			{
-				var builder = TurnStrategyBase.Build(_loggerFactory.Value);
+				var builder = TurnStrategyBase.Build(_loggerFactory);
 				return builder;
 			}
 
