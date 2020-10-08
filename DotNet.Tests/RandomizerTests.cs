@@ -11,6 +11,8 @@ namespace DotNet.Tests
 		private string ApiKey;
 		protected virtual string Map { get; }
 
+		private GameRunner _runner;
+
 
 		[TestInitialize]
 		public void Initialize()
@@ -23,9 +25,17 @@ namespace DotNet.Tests
 			ApiKey = configuration.GetValue<string>("ApiKey");
 			if (string.IsNullOrWhiteSpace(ApiKey))
 				throw new ArgumentNullException(nameof(ApiKey));
+
+			_runner = InitRunner();
 		}
 
-		public GameRunner InitRunner()
+		[TestCleanup]
+		public void Cleanup()
+		{
+			_runner?.EndGame();
+		}
+
+		private GameRunner InitRunner()
 		{
 			if (string.IsNullOrWhiteSpace(Map))
 				throw new ArgumentNullException(nameof(Map));
@@ -66,8 +76,7 @@ namespace DotNet.Tests
 				BuildingName = buildingName,
 			};
 
-			var runner = InitRunner();
-			var score = runner.Run(strategy);
+			var score = _runner.Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -89,8 +98,7 @@ namespace DotNet.Tests
 				BuildingName = buildingName,
 			};
 
-			var runner = InitRunner();
-			var score = runner.Run(strategy);
+			var score = _runner.Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -112,8 +120,7 @@ namespace DotNet.Tests
 				BuildingName = buildingName,
 			};
 
-			var runner = InitRunner();
-			var score = runner.Run(strategy);
+			var score = _runner.Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -135,8 +142,7 @@ namespace DotNet.Tests
 				BuildingName = buildingName,
 			};
 
-			var runner = InitRunner();
-			var score = runner.Run(strategy);
+			var score = _runner.Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -158,8 +164,7 @@ namespace DotNet.Tests
 				BuildingName = buildingName,
 			};
 
-			var runner = InitRunner();
-			var score = runner.Run(strategy);
+			var score = _runner.Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -181,8 +186,7 @@ namespace DotNet.Tests
 				BuildingName = buildingName,
 			};
 
-			var runner = InitRunner();
-			var score = runner.Run(strategy);
+			var score = _runner.Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 

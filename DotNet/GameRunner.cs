@@ -83,6 +83,25 @@ namespace DotNet
 			return score;
 		}
 
+		public void EndGame()
+		{
+			var state = GameLayer?.GetState();
+			if (state == null)
+				return;
+
+			var ended = state.Turn >= state.MaxTurns;
+			if (ended)
+			{
+				// Automatic ending
+			}
+			else
+			{
+				// Ends a game prematurely
+				// This is not needed to end a game that has been completed by playing all turns.
+				GameLayer.EndGame(state.GameId);
+			}
+		}
+
 		private static void PrintDebug_NewTurn(GameState state)
 		{
 			var currentPop = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>().Sum(x => x.CurrentPop);
