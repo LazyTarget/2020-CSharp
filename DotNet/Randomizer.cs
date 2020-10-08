@@ -102,7 +102,7 @@ namespace DotNet
 		public Position GetRandomBuildablePosition()
 		{
 			var positions = _gameState.GetBuildablePositions().ToArray();
-			var position = positions.ElementAt(Random.Next(0, positions.Length));
+			var position = positions.ElementAtOrDefault(Random.Next(0, positions.Length));
 			return position;
 		}
 

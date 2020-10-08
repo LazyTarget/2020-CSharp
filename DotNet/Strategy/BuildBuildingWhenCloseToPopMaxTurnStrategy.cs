@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using DotNet.Interfaces;
 using DotNet.models;
@@ -42,13 +43,21 @@ namespace DotNet.Strategy
 			if (currentPopPercentage > PopulationPercentageThreshold)
 			{
 				var building = state.AvailableResidenceBuildings.Find(x => x.BuildingName == BuildingName);
-				if (building.Cost < state.Funds)
+				if (building.Cost > state.Funds)
 				{
-					var position = randomizer.GetRandomBuildablePosition();
-
-					gameLayer.StartBuild(position, building.BuildingName, state.GameId);
-					return true;
+					Console.WriteLine("Wanted to build building, but cannot afford it");
+					return false;
 				}
+
+				var position = randomizer.GetRandomBuildablePosition();
+				if (position == null)
+				{
+					Console.WriteLine("No valid positions to build building");
+					return false;
+				}
+
+				gameLayer.StartBuild(position, building.BuildingName, state.GameId);
+				return true;
 			}
 			return false;
 		}

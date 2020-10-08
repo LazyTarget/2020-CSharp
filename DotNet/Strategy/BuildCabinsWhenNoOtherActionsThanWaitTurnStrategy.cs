@@ -1,4 +1,5 @@
-﻿using DotNet.Interfaces;
+﻿using System;
+using DotNet.Interfaces;
 
 namespace DotNet.Strategy
 {
@@ -21,9 +22,22 @@ namespace DotNet.Strategy
 				action = randomizer.GetRandomAction();
 				if (action == GameActions.StartBuild)
 				{
+					var building = state.AvailableResidenceBuildings.Find(x => x.BuildingName == "Cabin");
+					if (building.Cost > state.Funds)
+					{
+						Console.WriteLine("Wanted to build building, but cannot afford it");
+						return false;
+					}
+
 					// Prioritize building Cabins
 					var position = randomizer.GetRandomBuildablePosition();
-					gameLayer.StartBuild(position, "Cabin", state.GameId);
+					if (position == null)
+					{
+						Console.WriteLine("No valid positions to build building");
+						return false;
+					}
+
+					gameLayer.StartBuild(position, building.BuildingName, state.GameId);
 					return true;
 				}
 			}

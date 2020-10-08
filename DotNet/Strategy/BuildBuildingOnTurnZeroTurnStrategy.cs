@@ -1,4 +1,5 @@
-﻿using DotNet.Interfaces;
+﻿using System;
+using DotNet.Interfaces;
 
 namespace DotNet.Strategy
 {
@@ -20,6 +21,12 @@ namespace DotNet.Strategy
 				return false;
 
 			var position = randomizer.GetRandomBuildablePosition();
+			if (position == null)
+			{
+				Console.WriteLine("No valid positions to build building");
+				return false;
+			}
+
 			gameLayer.StartBuild(position, BuildingName, state.GameId);
 			return true;
 		}
