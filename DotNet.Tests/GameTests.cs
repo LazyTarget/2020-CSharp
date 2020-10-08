@@ -142,10 +142,10 @@ namespace DotNet.Tests
 			}
 
 			[TestMethod]
-			[TestCategory("Map_gothenburg")]
-			public virtual void Map_gothenburg()
+			[TestCategory("Map_Gothenburg")]
+			public virtual void Map_Gothenburg()
 			{
-				Map = "gothenburg";
+				Map = "Gothenburg";
 				var score = Run(Map);
 				AssertScore(score);
 			}
