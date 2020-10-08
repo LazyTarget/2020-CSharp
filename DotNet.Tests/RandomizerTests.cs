@@ -190,5 +190,11 @@ namespace DotNet.Tests
 		{
 			protected override string Map { get; } = "training1";
 		}
+
+		[TestClass]
+		public class training2Map : RandomizerTests
+		{
+			protected override string Map { get; } = "training2";
+		}
 	}
 }
