@@ -5,7 +5,6 @@ using DotNet.Logging;
 using DotNet.Strategy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
@@ -21,6 +20,8 @@ namespace DotNet.Tests
 		private GameRunner _runner;
 		private StringBuilder _output;
 
+		private readonly Lazy<ILoggerFactory> _loggerFactory;
+
 
 		protected RandomizerTests()
 		{
@@ -32,6 +33,15 @@ namespace DotNet.Tests
 			ApiKey = configuration.GetValue<string>("ApiKey");
 			if (string.IsNullOrWhiteSpace(ApiKey))
 				throw new ArgumentNullException(nameof(ApiKey));
+
+			_loggerFactory = new Lazy<ILoggerFactory>(() =>
+			{
+				_output = new StringBuilder();
+				var loggerFactory = LoggerFactory.Create(c => c
+					.AddProvider(new InMemoryLoggerProvider(_output))
+				);
+				return loggerFactory;
+			});
 		}
 
 		[TestInitialize]
@@ -63,11 +73,7 @@ namespace DotNet.Tests
 			}
 			try
 			{
-				_output = new StringBuilder();
-				var loggerFactory = LoggerFactory.Create(c => c
-					.AddProvider(new InMemoryLoggerProvider(_output)));
-
-				var runner = GameRunner.New(ApiKey, map, loggerFactory);
+				var runner = GameRunner.New(ApiKey, map, _loggerFactory.Value);
 				_runner = runner;
 				return runner;
 			}
@@ -76,6 +82,13 @@ namespace DotNet.Tests
 				throw;
 			}
 		}
+
+		protected virtual TurnStrategyBase.StrategyBuilder StrategyBuilder()
+		{
+			var builder = TurnStrategyBase.Build(_loggerFactory.Value);
+			return builder;
+		}
+
 
 		[TestMethod]
 		public void DefaultStrategy()
@@ -90,8 +103,8 @@ namespace DotNet.Tests
 		{
 			var buildingName = "Apartments";
 
-			var strategy = TurnStrategyBase
-				.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c => c.BuildingName = buildingName)
+			var strategy = StrategyBuilder()
+				.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c => c.BuildingName = buildingName)
 				.Append<BuyUpgradeTurnStrategy>()
 				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
@@ -215,8 +228,8 @@ namespace DotNet.Tests
 		[TestMethod]
 		public void WithoutStartBuildOnTurnZero()
 		{
-			var strategy = TurnStrategyBase
-				.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+			var strategy = StrategyBuilder()
+				.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
 				.Append<BuyUpgradeTurnStrategy>()
 				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
@@ -281,8 +294,8 @@ namespace DotNet.Tests
 			{
 				protected override TurnStrategyBase GetStrategy()
 				{
-					var strategy = TurnStrategyBase
-						.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+					var strategy = StrategyBuilder()
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
 						.Append<BuyUpgradeTurnStrategy>()
 						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()

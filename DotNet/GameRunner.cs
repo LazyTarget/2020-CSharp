@@ -62,7 +62,7 @@ namespace DotNet
 		{
 			// Make actions
 			GameState state;
-			var randomizer = new Randomizer(GameLayer, strategy);
+			var randomizer = new Randomizer(GameLayer, _loggerFactory, strategy);
 			while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
 			{
 				state = GameLayer.GetState();

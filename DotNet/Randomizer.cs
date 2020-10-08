@@ -4,6 +4,7 @@ using System.Linq;
 using DotNet.Interfaces;
 using DotNet.models;
 using DotNet.Strategy;
+using Microsoft.Extensions.Logging;
 
 namespace DotNet
 {
@@ -15,15 +16,15 @@ namespace DotNet
 		private readonly GameState _gameState;
 		private readonly TurnStrategyBase _strategy;
 
-		public Randomizer(IGameLayer gameLayer, TurnStrategyBase strategy = null)
+		public Randomizer(IGameLayer gameLayer, ILoggerFactory loggerFactory, TurnStrategyBase strategy = null)
 		{
 			_gameLayer = gameLayer;
 			_gameState = gameLayer.GetState();
 
 			if (strategy == null)
 			{
-				_strategy = TurnStrategyBase
-						.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+				_strategy = TurnStrategyBase.Build(loggerFactory)
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
 						.Append<BuyUpgradeTurnStrategy>()
 						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
