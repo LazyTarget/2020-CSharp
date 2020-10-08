@@ -29,8 +29,15 @@ namespace DotNet.Tests
 		{
 			if (string.IsNullOrWhiteSpace(Map))
 				throw new ArgumentNullException(nameof(Map));
-
-			return GameRunner.New(ApiKey, Map);
+			try
+			{
+				var runner = GameRunner.New(ApiKey, Map);
+				return runner;
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
 		}
 
 		[TestMethod]
