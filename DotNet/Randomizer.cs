@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using DotNet.Interfaces;
 using DotNet.models;
@@ -52,7 +53,7 @@ namespace DotNet
 			//var action = GetRandomAction();
 			//HandleAction(action);
 
-			Console.WriteLine("No strategy executed, invoking Wait as fallback");
+			Debug.WriteLine("No strategy executed, invoking Wait as fallback");
 			_gameLayer.ExecuteAction(GameActions.Wait);
 		}
 

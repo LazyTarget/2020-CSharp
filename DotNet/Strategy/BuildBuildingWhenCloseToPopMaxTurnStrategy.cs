@@ -38,21 +38,21 @@ namespace DotNet.Strategy
 			var currentPopPercentage = currentPop / (double)currentPopMax;
 
 
-			Console.WriteLine($"BuildBuildingWhenCloseToPopMaxTurnStrategy :: Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
+			Debug.WriteLine($"BuildBuildingWhenCloseToPopMaxTurnStrategy :: Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
 
 			if (currentPopPercentage > PopulationPercentageThreshold)
 			{
 				var building = state.AvailableResidenceBuildings.Find(x => x.BuildingName == BuildingName);
 				if (building.Cost > state.Funds)
 				{
-					Console.WriteLine("Wanted to build building, but cannot afford it");
+					Debug.WriteLine("Wanted to build building, but cannot afford it");
 					return false;
 				}
 
 				var position = randomizer.GetRandomBuildablePosition();
 				if (position == null)
 				{
-					Console.WriteLine("No valid positions to build building");
+					Debug.WriteLine("No valid positions to build building");
 					return false;
 				}
 

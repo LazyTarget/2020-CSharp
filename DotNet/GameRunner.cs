@@ -51,10 +51,11 @@ namespace DotNet
 		public ScoreResponse Run(TurnStrategyBase strategy = null)
 		{
 			// Make actions
+			GameState state;
 			var randomizer = new Randomizer(GameLayer, strategy);
 			while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
 			{
-				var state = GameLayer.GetState();
+				state = GameLayer.GetState();
 				PrintDebug_NewTurn(state);
 
 				randomizer.HandleTurn();
@@ -72,10 +73,16 @@ namespace DotNet
 				}
 			}
 
-			var gameId = GameLayer.GetState().GameId;
-			Console.WriteLine($"Done with game: {gameId}");
+			state = GameLayer.GetState();
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine($"Done with game: {state.GameId}");
+			Console.WriteLine($"Funds: {state.Funds}");
+			Console.WriteLine($"Buildings: {state.GetCompletedBuildings().Count()}");
+			Console.WriteLine($"Upgrades: {state.GetCompletedBuildings().Sum(x => x.Effects.Count)}");
 
-			var score = GameLayer.GetScore(gameId);
+			var score = GameLayer.GetScore(state.GameId);
+			Console.WriteLine();
 			Console.WriteLine($"Final score: {score.FinalScore}");
 			Console.WriteLine($"Co2: {score.TotalCo2}");
 			Console.WriteLine($"Pop: {score.FinalPopulation}");
@@ -99,6 +106,7 @@ namespace DotNet
 				// Ends a game prematurely
 				// This is not needed to end a game that has been completed by playing all turns.
 				GameLayer.EndGame(state.GameId);
+				Console.WriteLine("Game ended prematurely");
 			}
 		}
 

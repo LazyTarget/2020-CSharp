@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using DotNet.Interfaces;
 
 namespace DotNet.Strategy
@@ -23,7 +24,7 @@ namespace DotNet.Strategy
 			var position = randomizer.GetRandomBuildablePosition();
 			if (position == null)
 			{
-				Console.WriteLine("No valid positions to build building");
+				Debug.WriteLine("No valid positions to build building");
 				return false;
 			}
 
