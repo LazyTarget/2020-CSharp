@@ -20,12 +20,23 @@ namespace DotNet.Strategy
 
 		public double PopulationPercentageThreshold { get; set; } = 0.805;
 
+		public int MaxNumberOfBuildings { get; set; } = 10;
+
 		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
-			// Only build when has nothing else to do
-			var currentPop = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>().Sum(x => x.CurrentPop);
+			var buildings = state.GetBuiltBuildings().ToArray();
+			if (buildings.Length >= MaxNumberOfBuildings)
+			{
+				// Don't build any more buildings
+				return false;
+			}
 
-			var currentPopMax = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>()
+			var completedResidences = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>().ToArray();
+
+			// Only build when has nothing else to do
+			var currentPop = completedResidences.Sum(x => x.CurrentPop);
+
+			var currentPopMax = completedResidences
 				.Join(state.AvailableResidenceBuildings, ok => ok.BuildingName, ik => ik.BuildingName,
 					(rb, bp) => new {bp, rb})
 				.Sum(x => x.bp.MaxPop);
