@@ -12,6 +12,7 @@ namespace DotNet.Strategy
 	{
 		private const double _degreesPerPop = 0.04;
 		private const double _degreesPerExcessMwh = 0.75;
+		private const int _adjustCost = 150;
 
 		public AdjustBuildingTemperaturesTurnStrategy(TurnStrategyBase parent = null) : base(parent)
 		{
@@ -167,6 +168,12 @@ namespace DotNet.Strategy
 					continue;
 				}
 
+
+				if (state.Funds < _adjustCost)
+				{
+					Debug.WriteLine($"Wanted to apply energy '{energy}' to building at {{{building.Position}}}, but has insufficient funds");
+					return false;
+				}
 
 				gameLayer.AdjustEnergy(building.Position, energy, state.GameId);
 				return true;
