@@ -1,5 +1,6 @@
 using System;
 using DotNet.Strategy;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DotNet.Tests
@@ -14,7 +15,14 @@ namespace DotNet.Tests
 		[TestInitialize]
 		public void Initialize()
 		{
-
+			var configuration = new ConfigurationBuilder()
+				.AddJsonFile("appsettings.json", true, true)
+				.AddEnvironmentVariables("CONSIDITION_")
+				.AddUserSecrets<RandomizerTests>(true)
+				.Build();
+			ApiKey = configuration.GetValue<string>("ApiKey");
+			if (string.IsNullOrWhiteSpace(ApiKey))
+				throw new ArgumentNullException(nameof(ApiKey));
 		}
 
 		public GameRunner InitRunner()
