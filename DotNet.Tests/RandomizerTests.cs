@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using DotNet.Strategy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 
 namespace DotNet.Tests
 {
@@ -32,10 +34,7 @@ namespace DotNet.Tests
 			TestInitialize();
 		}
 
-		protected virtual void TestInitialize()
-		{
-			_runner = InitRunner();
-		}
+		protected virtual void TestInitialize() { }
 
 		[TestCleanup]
 		public void Cleanup()
@@ -43,7 +42,7 @@ namespace DotNet.Tests
 			_runner?.EndGame();
 		}
 
-		private GameRunner InitRunner(string map = null)
+		protected virtual GameRunner GetRunner(string map = null)
 		{
 			map ??= Map;
 			if (string.IsNullOrWhiteSpace(map))
@@ -53,6 +52,7 @@ namespace DotNet.Tests
 			try
 			{
 				var runner = GameRunner.New(ApiKey, map);
+				_runner = runner;
 				return runner;
 			}
 			catch (Exception ex)
@@ -64,7 +64,7 @@ namespace DotNet.Tests
 		[TestMethod]
 		public void DefaultStrategy()
 		{
-			var runner = InitRunner();
+			var runner = GetRunner();
 			var score = runner.Run();
 			Assert.IsTrue(score.FinalScore > 0);
 		}
@@ -82,7 +82,7 @@ namespace DotNet.Tests
 				.Append<AdjustBuildingTemperaturesTurnStrategy>()
 				.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = "Cabin");
 
-			var score = _runner.Run(strategy);
+			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -104,7 +104,7 @@ namespace DotNet.Tests
 				BuildingName = "Cabin",
 			};
 
-			var score = _runner.Run(strategy);
+			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -126,7 +126,7 @@ namespace DotNet.Tests
 				BuildingName = "Cabin",
 			};
 
-			var score = _runner.Run(strategy);
+			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -148,7 +148,7 @@ namespace DotNet.Tests
 				BuildingName = "Cabin",
 			};
 
-			var score = _runner.Run(strategy);
+			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -170,7 +170,7 @@ namespace DotNet.Tests
 				BuildingName = "Cabin",
 			};
 
-			var score = _runner.Run(strategy);
+			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -192,7 +192,7 @@ namespace DotNet.Tests
 				BuildingName = "Cabin",
 			};
 
-			var score = _runner.Run(strategy);
+			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -207,7 +207,7 @@ namespace DotNet.Tests
 				.Append<AdjustBuildingTemperaturesTurnStrategy>();
 				//.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = "Cabin");
 
-			var score = _runner.Run(strategy);
+			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
 		}
 
@@ -229,20 +229,14 @@ namespace DotNet.Tests
 		{
 			protected abstract TurnStrategyBase GetStrategy();
 
-			protected override void TestInitialize()
-			{
-				// Don't run InitRunner in TestInitialize
-				// Instead run it in each test
-			}
-
 			[TestMethod]
 			public virtual void training1()
 			{
 				Map = "training1";
 				var strategy = GetStrategy();
 
-				_runner = InitRunner();
-				var score = _runner.Run(strategy);
+				var runner = GetRunner();
+				var score = runner.Run(strategy);
 				Assert.IsTrue(score.FinalScore > 0);
 			}
 
@@ -252,8 +246,8 @@ namespace DotNet.Tests
 				Map = "training2";
 				var strategy = GetStrategy();
 
-				_runner = InitRunner();
-				var score = _runner.Run(strategy);
+				var runner = GetRunner();
+				var score = runner.Run(strategy);
 				Assert.IsTrue(score.FinalScore > 0);
 			}
 			
