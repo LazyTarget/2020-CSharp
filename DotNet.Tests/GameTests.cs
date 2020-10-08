@@ -171,6 +171,106 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			public class Gothenburg_1 : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 3;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 10;
+						})
+						.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new[] { "Playground", "Charger" })
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "EnvironmentalHouse")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class Gothenburg_2 : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 3;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 10;
+						})
+						.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new[] { "Playground", "Charger" })
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class Gothenburg_3 : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 3;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 10;
+						})
+						.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new[] { "Playground", "Charger" })
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "ModernApartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class Gothenburg_4 : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 3;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 10;
+						})
+						.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new[] { "Playground", "Charger" })
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Apartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
 			public class Kiruna_1 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
