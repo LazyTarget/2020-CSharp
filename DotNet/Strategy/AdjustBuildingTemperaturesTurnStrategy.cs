@@ -33,6 +33,8 @@ namespace DotNet.Strategy
 
 		public double TargetTemperature { get; set; } = 21;
 
+		public bool UseSecondaryAlgorithm { get; set; } = false;
+
 		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
 			double? predictedTrend = null;
@@ -123,7 +125,7 @@ namespace DotNet.Strategy
 				              + building.Temperature * blueprint.Emissivity
 				              - outdoorTemp * blueprint.Emissivity) / _degreesPerExcessMwh;
 
-				var energy = energyOld;
+				var energy = UseSecondaryAlgorithm ? energyNew : energyOld;
 
 				if (predictedTrend.GetValueOrDefault() > 0)
 				{

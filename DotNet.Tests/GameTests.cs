@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-[assembly: Parallelize(Workers = 3, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 
 namespace DotNet.Tests
 {
@@ -124,6 +124,7 @@ namespace DotNet.Tests
 			}
 
 			[TestMethod]
+			[TestCategory("Map_training1")]
 			public virtual void Map_training1()
 			{
 				Map = "training1";
@@ -132,9 +133,19 @@ namespace DotNet.Tests
 			}
 
 			[TestMethod]
+			[TestCategory("Map_training2")]
 			public virtual void Map_training2()
 			{
 				Map = "training2";
+				var score = Run(Map);
+				AssertScore(score);
+			}
+
+			[TestMethod]
+			[TestCategory("Map_gothenburg")]
+			public virtual void Map_gothenburg()
+			{
+				Map = "gothenburg";
 				var score = Run(Map);
 				AssertScore(score);
 			}
