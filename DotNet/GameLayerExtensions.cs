@@ -99,7 +99,16 @@ namespace DotNet
 					if (i == position.x && j == position.y)
 						continue;
 
-					var blockedByTerrain = state.Map[i][j] != 0;
+					int t;
+					try
+					{
+						t = state.Map[i][j];
+					}
+					catch (IndexOutOfRangeException e)
+					{
+						continue;
+					}
+					var blockedByTerrain = t != 0;
 					if (blockedByTerrain)
 						continue;
 
