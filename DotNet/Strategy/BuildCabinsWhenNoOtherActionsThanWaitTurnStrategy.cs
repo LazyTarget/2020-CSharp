@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using DotNet.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace DotNet.Strategy
 {
@@ -27,7 +28,7 @@ namespace DotNet.Strategy
 					var building = state.AvailableResidenceBuildings.Find(x => x.BuildingName == "Cabin");
 					if (building.Cost > state.Funds)
 					{
-						Debug.WriteLine("Wanted to build building, but cannot afford it");
+						Logger.LogWarning("Wanted to build building, but cannot afford it");
 						return false;
 					}
 
@@ -35,7 +36,7 @@ namespace DotNet.Strategy
 					var position = randomizer.GetRandomBuildablePosition();
 					if (position == null)
 					{
-						Debug.WriteLine("No valid positions to build building");
+						Logger.LogWarning("No valid positions to build building");
 						return false;
 					}
 

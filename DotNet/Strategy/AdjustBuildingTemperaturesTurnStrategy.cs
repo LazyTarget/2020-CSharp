@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using DotNet.Interfaces;
 using DotNet.models;
+using Microsoft.Extensions.Logging;
 
 namespace DotNet.Strategy
 {
@@ -62,7 +63,7 @@ namespace DotNet.Strategy
 					predictedTrend = predictedTrend.Value * 2;
 
 					outdoorTemp = state.CurrentTemp + predictedTrend.Value;
-					Debug.WriteLine($"Using prediction for OutdoorTemp: {outdoorTemp}, CurrentTemp: {state.CurrentTemp}");
+					Logger.LogDebug($"Using prediction for OutdoorTemp: {outdoorTemp}, CurrentTemp: {state.CurrentTemp}");
 				}
 			}
 
@@ -130,7 +131,7 @@ namespace DotNet.Strategy
 
 				if (energy < blueprint.BaseEnergyNeed)
 				{
-					Debug.WriteLine($"Wanted to set lower energy than BaseEnergyNeed, restoring to base: {blueprint.BaseEnergyNeed:N3} Mwh from {energy:N3} Mwh");
+					Logger.LogWarning($"Wanted to set lower energy than BaseEnergyNeed, restoring to base: {blueprint.BaseEnergyNeed:N3} Mwh from {energy:N3} Mwh");
 					energy = blueprint.BaseEnergyNeed;
 				}
 
@@ -142,12 +143,12 @@ namespace DotNet.Strategy
 					_degreesPerPop * building.CurrentPop -
 					(building.Temperature - outdoorTemp) * blueprint.Emissivity;
 
-				Debug.WriteLine($"{building.BuildingName} at {{{building.Position}}}");
-				Debug.WriteLine($"Current building temp: \t\t{building.Temperature:N3}");
-				Debug.WriteLine($"Next building temp: \t\t{newTemp:N3}");
-				Debug.WriteLine($"Predicted New Temp: \t\t{predictedNewTemp:N3}");
-				Debug.WriteLine($"Current building energy: \t{building.EffectiveEnergyIn}/{building.RequestedEnergyIn} Mwh");
-				Debug.WriteLine($"New requested energy: \t\t{energy:N3} Mwh");
+				Logger.LogDebug($"{building.BuildingName} at {{{building.Position}}}");
+				Logger.LogDebug($"Current building temp: \t\t{building.Temperature:N3}");
+				Logger.LogDebug($"Next building temp: \t\t{newTemp:N3}");
+				Logger.LogDebug($"Predicted New Temp: \t\t{predictedNewTemp:N3}");
+				Logger.LogDebug($"Current building energy: \t{building.EffectiveEnergyIn}/{building.RequestedEnergyIn} Mwh");
+				Logger.LogDebug($"New requested energy: \t\t{energy:N3} Mwh");
 
 				if (newTemp < TargetTemperature)
 				{
@@ -181,7 +182,7 @@ namespace DotNet.Strategy
 
 				if (state.Funds < _adjustCost)
 				{
-					Debug.WriteLine($"Wanted to apply energy '{energy}' to building at {{{building.Position}}}, but has insufficient funds");
+					Logger.LogWarning($"Wanted to apply energy '{energy}' to building at {{{building.Position}}}, but has insufficient funds");
 					return false;
 				}
 

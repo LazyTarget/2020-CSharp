@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using DotNet.Interfaces;
 using DotNet.models;
+using Microsoft.Extensions.Logging;
 
 namespace DotNet.Strategy
 {
@@ -26,7 +27,7 @@ namespace DotNet.Strategy
 			var position = randomizer.GetRandomBuildablePosition();
 			if (position == null)
 			{
-				Debug.WriteLine("No valid positions to build building");
+				Logger.LogWarning("No valid positions to build building");
 				return false;
 			}
 

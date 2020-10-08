@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using DotNet.Interfaces;
 using DotNet.models;
+using Microsoft.Extensions.Logging;
 
 namespace DotNet.Strategy
 {
@@ -49,7 +50,7 @@ namespace DotNet.Strategy
 			var currentPopPercentage = currentPopMax > 0 ? currentPop / (double)currentPopMax : 0;
 
 
-			Debug.WriteLine($"BuildBuildingWhenCloseToPopMaxTurnStrategy :: Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
+			Logger.LogDebug($"Pop {currentPop}/{currentPopMax} = {currentPopPercentage:P2}		(+ {pendingPopMaxIncrease})");
 
 			if (currentPopPercentage > PopulationPercentageThreshold || 
 			    buildings.Length < 1)
@@ -57,7 +58,7 @@ namespace DotNet.Strategy
 				var position = randomizer.GetRandomBuildablePosition();
 				if (position == null)
 				{
-					Debug.WriteLine("No valid positions to build building");
+					Logger.LogWarning("No valid positions to build building");
 					return false;
 				}
 
@@ -84,7 +85,7 @@ namespace DotNet.Strategy
 				if (building.Cost > state.Funds)
 				{
 					// Cannot afford it
-					Debug.WriteLine("Wanted to build building, but cannot afford it");
+					Logger.LogWarning("Wanted to build building, but cannot afford it");
 					return false;
 				}
 
