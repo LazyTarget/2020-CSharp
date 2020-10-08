@@ -4,6 +4,7 @@ using DotNet.Interfaces;
 
 namespace DotNet.Strategy
 {
+	[Obsolete]
 	public class BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy : TurnStrategyBase
 	{
 		public BuildCabinsWhenNoOtherActionsThanWaitTurnStrategy() : base()
