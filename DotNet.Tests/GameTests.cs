@@ -6,12 +6,11 @@ using System.Text;
 using DotNet.Logging;
 using DotNet.models;
 using DotNet.Strategy;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 3, Scope = ExecutionScope.MethodLevel)]
 
 namespace DotNet.Tests
 {

@@ -69,9 +69,7 @@ namespace DotNet.Tests
 
 		}
 
-
-		[TestMethod]
-		public void PurgeActiveGames()
+		public void LoopGames(bool remove)
 		{
 			var gameLayer = new GameLayer(ApiKey);
 			var games = gameLayer.GetGames();
@@ -79,13 +77,16 @@ namespace DotNet.Tests
 			{
 				if (!game.Active)
 					continue;
-				
+
 				Console.WriteLine($"Game :: {game.GameId}");
 				Console.WriteLine($"Started = {game.Started}");
 				Console.WriteLine($"StartedAt = {game.StartedAt}");
 
-				gameLayer.EndGame(game.GameId);
-				Console.WriteLine($"Ending game...");
+				if (remove)
+				{
+					gameLayer.EndGame(game.GameId);
+					Console.WriteLine($"Ending game...");
+				}
 
 				Console.WriteLine();
 			}
@@ -94,6 +95,19 @@ namespace DotNet.Tests
 			Console.WriteLine("Total games: " + games.Count);
 			Console.WriteLine("Active games: " + games.Count(x => x.Active));
 			Console.WriteLine("Started games: " + games.Count(x => x.Started));
+		}
+
+
+		[TestMethod]
+		public void GetActiveGames()
+		{
+			LoopGames(false);
+		}
+
+		[TestMethod]
+		public void PurgeActiveGames()
+		{
+			LoopGames(true);
 		}
 	}
 }

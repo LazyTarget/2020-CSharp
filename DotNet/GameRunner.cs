@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using DotNet.models;
 using DotNet.Strategy;
 using Microsoft.Extensions.Logging;
@@ -119,6 +120,10 @@ namespace DotNet
 				// This is not needed to end a game that has been completed by playing all turns.
 				GameLayer.EndGame(state.GameId);
 				_logger.LogInformation("Game ended prematurely");
+				
+				// Sleep again to make sure the API and Database has ended the game
+				Thread.Sleep(5000);
+				_logger.LogInformation("Finished sleeping after signaled Api that the game has ended");
 			}
 		}
 
