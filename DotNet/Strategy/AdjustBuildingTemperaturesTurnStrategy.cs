@@ -128,6 +128,12 @@ namespace DotNet.Strategy
 					energy *= 1.1;
 				}
 
+				if (energy < blueprint.BaseEnergyNeed)
+				{
+					Debug.WriteLine($"Wanted to set lower energy than BaseEnergyNeed, restoring to base: {blueprint.BaseEnergyNeed:N3} Mwh from {energy:N3} Mwh");
+					energy = blueprint.BaseEnergyNeed;
+				}
+
 
 				// Predict next temperature, if change energy
 				var predictedNewTemp =
