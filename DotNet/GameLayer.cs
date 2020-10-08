@@ -137,7 +137,8 @@ namespace DotNet
         /// </summary>
         public GameState GetNewGameState(string gameId)
         {
-            _gameState.UpdateState(_api.GetGameState(gameId).Result);
+	        var state = _api.GetGameState(gameId).Result;
+            _gameState.UpdateState(state);
             return _gameState;
         }
 

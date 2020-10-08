@@ -74,31 +74,31 @@ namespace DotNet
 
 				foreach (var message in GameLayer.GetState().Messages)
 				{
-					Console.WriteLine(message);
-					if (Debugger.IsAttached)
-						Debug.WriteLine(message);
+					_logger.LogInformation(message);
+					//if (Debugger.IsAttached)
+					//	Debug.WriteLine(message);
 				}
 
 				foreach (var error in GameLayer.GetState().Errors)
 				{
-					Console.WriteLine("Error: " + error);
+					_logger.LogError("Error: " + error);
 				}
 			}
 
 			state = GameLayer.GetState();
-			Console.WriteLine();
-			Console.WriteLine();
-			Console.WriteLine($"Done with game: {state.GameId}");
-			Console.WriteLine($"Funds: {state.Funds}");
-			Console.WriteLine($"Buildings: {state.GetCompletedBuildings().Count()}");
-			Console.WriteLine($"Upgrades: {state.GetCompletedBuildings().Sum(x => x.Effects.Count)}");
+			_logger.LogInformation("");
+			_logger.LogInformation("");
+			_logger.LogInformation($"Done with game: {state.GameId}");
+			_logger.LogInformation($"Funds: {state.Funds}");
+			_logger.LogInformation($"Buildings: {state.GetCompletedBuildings().Count()}");
+			_logger.LogInformation($"Upgrades: {state.GetCompletedBuildings().Sum(x => x.Effects.Count)}");
 
 			var score = GameLayer.GetScore(state.GameId);
-			Console.WriteLine();
-			Console.WriteLine($"Final score: {score.FinalScore}");
-			Console.WriteLine($"Co2: {score.TotalCo2}");
-			Console.WriteLine($"Pop: {score.FinalPopulation}");
-			Console.WriteLine($"Happiness: {score.TotalHappiness}");
+			_logger.LogInformation("");
+			_logger.LogInformation($"Final score: {score.FinalScore}");
+			_logger.LogInformation($"Co2: {score.TotalCo2}");
+			_logger.LogInformation($"Pop: {score.FinalPopulation}");
+			_logger.LogInformation($"Happiness: {score.TotalHappiness}");
 			return score;
 		}
 
@@ -118,11 +118,11 @@ namespace DotNet
 				// Ends a game prematurely
 				// This is not needed to end a game that has been completed by playing all turns.
 				GameLayer.EndGame(state.GameId);
-				Console.WriteLine("Game ended prematurely");
+				_logger.LogInformation("Game ended prematurely");
 			}
 		}
 
-		private static void PrintDebug_NewTurn(GameState state)
+		private void PrintDebug_NewTurn(GameState state)
 		{
 			var currentPop = state.GetCompletedBuildings().OfType<BuiltResidenceBuilding>().Sum(x => x.CurrentPop);
 
@@ -133,7 +133,7 @@ namespace DotNet
 
 			var currentPopPercentage = currentPopMax > 0 ? currentPop / (double)currentPopMax : 0;
 
-			Debug.WriteLine($"Begin New Turn :: Turn={state.Turn}, Funds={state.Funds}, Temp={state.CurrentTemp}, Pop: {currentPop}/{currentPopMax} ({currentPopPercentage:P2})");
+			_logger.LogDebug($"Begin New Turn :: Turn={state.Turn}, Funds={state.Funds}, Temp={state.CurrentTemp}, Pop: {currentPop}/{currentPopMax} ({currentPopPercentage:P2})");
 		}
 	}
 }

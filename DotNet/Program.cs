@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using DotNet.models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 
 namespace DotNet
@@ -18,7 +19,8 @@ namespace DotNet
         {
             var loggerFactory = LoggerFactory.Create(c => c
                 .AddConsole()
-                .AddDebug());
+                .AddDebug()
+                .SetMinimumLevel(LogLevel.Debug));
 
             // Init GameLayer
             var apiKey = args.ElementAtOrDefault(0) ?? ApiKey;
