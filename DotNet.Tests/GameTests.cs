@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DotNet.Tests
 {
 	[TestClass]
-	public abstract class RandomizerTests
+	public abstract class GameTests
 	{
 		private string ApiKey = AssemblySetup.ApiKey;
 		protected virtual string Map { get; set; }
@@ -23,7 +23,7 @@ namespace DotNet.Tests
 		private readonly Lazy<ILoggerFactory> _loggerFactory;
 
 
-		protected RandomizerTests()
+		protected GameTests()
 		{
 			_loggerFactory = new Lazy<ILoggerFactory>(() =>
 			{
@@ -233,19 +233,20 @@ namespace DotNet.Tests
 
 
 		[TestClass]
-		public class training1Map : RandomizerTests
+		public class training1Map : GameTests
 		{
 			protected override string Map { get; set; } = "training1";
 		}
 
 		[TestClass]
-		public class training2Map : RandomizerTests
+		public class training2Map : GameTests
 		{
 			protected override string Map { get; set; } = "training2";
 		}
 
+
 		[TestClass]
-		public abstract class Strategy : RandomizerTests
+		public abstract class StrategyTests : GameTests
 		{
 			protected abstract TurnStrategyBase GetStrategy();
 
@@ -270,9 +271,11 @@ namespace DotNet.Tests
 				var score = runner.Run(strategy);
 				Assert.IsTrue(score.FinalScore > 0);
 			}
-			
+
+			#region Strategies
+
 			[TestClass]
-			public class Default : Strategy
+			public class DefaultStrategy : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
 				{
@@ -281,7 +284,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			public class Custom : Strategy
+			public class WithoutStartBuildOnTurnZero : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
 				{
@@ -291,9 +294,12 @@ namespace DotNet.Tests
 						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 						.Append<AdjustBuildingTemperaturesTurnStrategy>();
+					//.Append<BuildBuildingOnTurnZeroTurnStrategy>(c => c.BuildingName = "Cabin");
 					return strategy;
 				}
 			}
+			
+			#endregion Strategies
 		}
 	}
 }

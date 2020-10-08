@@ -18,7 +18,7 @@ namespace DotNet.Tests
 			Configuration = new ConfigurationBuilder()
 				.AddJsonFile("appsettings.json", true, true)
 				.AddEnvironmentVariables("CONSIDITION_")
-				.AddUserSecrets<RandomizerTests>(true)
+				.AddUserSecrets(typeof(AssemblySetup).Assembly, true)
 				.Build();
 
 			ApiKey = Configuration.GetValue<string>("ApiKey");
