@@ -28,9 +28,15 @@ namespace DotNet.Tests
 			_loggerFactory = new Lazy<ILoggerFactory>(() =>
 			{
 				_output = new StringBuilder();
-				var loggerFactory = LoggerFactory.Create(c => c
-					.AddProvider(new InMemoryLoggerProvider(_output))
-				);
+
+				var loggerFilterOptions = new LoggerFilterOptions
+				{
+					MinLevel = LogLevel.Information,
+				};
+				if (Debugger.IsAttached)
+					loggerFilterOptions.MinLevel = LogLevel.Debug;
+
+				var loggerFactory = new LoggerFactory(new[] {new InMemoryLoggerProvider(_output)}, loggerFilterOptions);
 				return loggerFactory;
 			});
 		}
