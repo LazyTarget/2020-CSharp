@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DotNet.Tests
 {
 	[TestClass]
-	public class ReplayTests
+	public class HelperTests
 	{
 		private string ApiKey;
 
@@ -81,6 +81,33 @@ namespace DotNet.Tests
 			var gameInfo = gameLayer.GetNewGameState(null);
 			var replay = LoadReplay(gameInfo.GameId);
 
+		}
+
+
+		[TestMethod]
+		public void PurgeActiveGames()
+		{
+			var gameLayer = new GameLayer(ApiKey);
+			var games = gameLayer.GetGames();
+			foreach (var game in games)
+			{
+				if (!game.Active)
+					continue;
+				
+				Console.WriteLine($"Game :: {game.GameId}");
+				Console.WriteLine($"Started = {game.Started}");
+				Console.WriteLine($"StartedAt = {game.StartedAt}");
+
+				gameLayer.EndGame(game.GameId);
+				Console.WriteLine($"Ending game...");
+
+				Console.WriteLine();
+			}
+
+			Console.WriteLine();
+			Console.WriteLine("Total games: " + games.Count);
+			Console.WriteLine("Active games: " + games.Count(x => x.Active));
+			Console.WriteLine("Started games: " + games.Count(x => x.Started));
 		}
 	}
 }
