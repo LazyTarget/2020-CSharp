@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using DotNet.Logging;
+using DotNet.models;
 using DotNet.Strategy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -90,6 +91,12 @@ namespace DotNet.Tests
 			}
 		}
 
+		protected virtual void AssertScore(ScoreResponse score)
+		{
+			Assert.IsTrue(score.FinalScore > 0, $"Run failed to get a positive score");
+			Assert.IsTrue(score.FinalPopulation > 0, $"Run failed to maintain population in the city");
+		}
+
 
 		[TestClass]
 		public abstract class StrategyTests : GameTests
@@ -97,25 +104,25 @@ namespace DotNet.Tests
 			protected abstract TurnStrategyBase GetStrategy();
 
 			[TestMethod]
-			public virtual void training1()
+			public virtual void Map_training1()
 			{
 				Map = "training1";
 				var strategy = GetStrategy();
 
 				var runner = GetRunner();
 				var score = runner.Run(strategy);
-				Assert.IsTrue(score.FinalScore > 0);
+				AssertScore(score);
 			}
 
 			[TestMethod]
-			public virtual void training2()
+			public virtual void Map_training2()
 			{
 				Map = "training2";
 				var strategy = GetStrategy();
 
 				var runner = GetRunner();
 				var score = runner.Run(strategy);
-				Assert.IsTrue(score.FinalScore > 0);
+				AssertScore(score);
 			}
 
 			#region Strategies
