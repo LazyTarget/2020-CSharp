@@ -201,6 +201,15 @@ namespace DotNet
             return JsonConvert.DeserializeObject<ScoreResponse>(result);
         }
 
+        public async Task<GameReplayResponse> GetReplay(string gameId)
+        {
+            var response = await _client.GetAsync("replay?GameId?" + gameId);
+            response.EnsureSuccessStatusCode();
+    
+            var result = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<GameReplayResponse>(result);
+        }
+
         public async Task<GameState> GetGameInfo(string gameId)
         {
             var response = await _client.GetAsync("gameInfo?GameId?" + gameId);

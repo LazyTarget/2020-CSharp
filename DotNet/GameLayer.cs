@@ -118,6 +118,12 @@ namespace DotNet
             return response.Result;
         }
 
+        public GameReplayResponse GetReplay(string gameId)
+        {
+	        var response = _api.GetReplay(gameId);
+	        return response.Result;
+        }
+
         /// <summary> Updates the GameLayer with the game info from the specified gameId.</summary>
         ///
         public GameState GetNewGameInfo(string gameId)
