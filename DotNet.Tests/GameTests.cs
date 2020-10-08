@@ -25,6 +25,7 @@ namespace DotNet.Tests
 		private StringBuilder _output;
 
 		private readonly Lazy<ILoggerFactory> _loggerFactory;
+		private readonly ILogger _logger;
 
 
 		protected GameTests()
@@ -49,6 +50,7 @@ namespace DotNet.Tests
 				var loggerFactory = new LoggerFactory(providers, loggerFilterOptions);
 				return loggerFactory;
 			});
+			_logger = _loggerFactory.Value.CreateLogger(GetType());
 		}
 
 		[TestInitialize]
@@ -66,7 +68,9 @@ namespace DotNet.Tests
 
 			var fullLog = _output?.ToString();
 			if (!string.IsNullOrWhiteSpace(fullLog))
-				Debug.WriteLine(fullLog);
+			{
+				Microsoft.VisualStudio.TestTools.UnitTesting.Logging.Logger.LogMessage(fullLog);
+			}
 		}
 
 		protected virtual GameRunner GetRunner(string map = null)
@@ -81,15 +85,19 @@ namespace DotNet.Tests
 			}
 			try
 			{
+				_logger.LogInformation("Initializing runner");
 				var runner = GameRunner.New(ApiKey, map, _loggerFactory.Value);
 				_runner = runner;
 				return runner;
 			}
 			catch (Exception ex)
 			{
+				_logger.LogError(ex, $"Exception when initializing runner: {ex}");
 				throw;
 			}
 		}
+
+		protected abstract ScoreResponse Run(string map);
 
 		protected virtual void AssertScore(ScoreResponse score)
 		{
@@ -103,14 +111,27 @@ namespace DotNet.Tests
 		{
 			protected abstract TurnStrategyBase GetStrategy();
 
+			protected override ScoreResponse Run(string map)
+			{
+				try
+				{
+					var strategy = GetStrategy();
+					var runner = GetRunner(map);
+					var score = runner.Run(strategy);
+					return score;
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, $"Exception when running: {ex}");
+					throw;
+				}
+			}
+
 			[TestMethod]
 			public virtual void Map_training1()
 			{
 				Map = "training1";
-				var strategy = GetStrategy();
-
-				var runner = GetRunner();
-				var score = runner.Run(strategy);
+				var score = Run(Map);
 				AssertScore(score);
 			}
 
@@ -118,10 +139,7 @@ namespace DotNet.Tests
 			public virtual void Map_training2()
 			{
 				Map = "training2";
-				var strategy = GetStrategy();
-
-				var runner = GetRunner();
-				var score = runner.Run(strategy);
+				var score = Run(Map);
 				AssertScore(score);
 			}
 
