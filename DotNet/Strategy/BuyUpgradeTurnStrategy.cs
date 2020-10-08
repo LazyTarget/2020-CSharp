@@ -35,7 +35,8 @@ namespace DotNet.Strategy
 			var allowedUpgrades = IncludedUpgrades != null
 				? upgrades.Where(x => IncludedUpgrades.Contains(x.Name)).ToArray()
 				: upgrades.ToArray();
-			var upgrade = allowedUpgrades.ElementAtOrDefault(randomizer.Random.Next(0, allowedUpgrades.Length));
+			var affordedUpgrades = allowedUpgrades.Where(x => x.Cost < state.Funds).ToArray();
+			var upgrade = affordedUpgrades.ElementAtOrDefault(randomizer.Random.Next(0, affordedUpgrades.Length));
 			if (upgrade == null)
 			{
 				// No allowed upgrades
