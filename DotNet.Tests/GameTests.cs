@@ -152,9 +152,9 @@ namespace DotNet.Tests
 
 			[TestMethod]
 			[TestCategory("Map_Kiruna")]
-			public virtual void Map__Kiruna()
+			public virtual void Map_Kiruna()
 			{
-				Map = "_Kiruna";
+				Map = "Kiruna";
 				var score = Run(Map);
 				AssertScore(score);
 			}
