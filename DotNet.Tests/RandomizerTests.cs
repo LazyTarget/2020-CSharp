@@ -9,7 +9,7 @@ namespace DotNet.Tests
 	public abstract class RandomizerTests
 	{
 		private string ApiKey;
-		protected virtual string Map { get; }
+		protected virtual string Map { get; set; }
 
 		private GameRunner _runner;
 
@@ -186,7 +186,7 @@ namespace DotNet.Tests
 		}
 
 		[TestMethod]
-		public void WithOutStartBuildOnTurnZero()
+		public void WithoutStartBuildOnTurnZero()
 		{
 			var strategy = TurnStrategyBase
 				.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
@@ -204,13 +204,62 @@ namespace DotNet.Tests
 		[TestClass]
 		public class training1Map : RandomizerTests
 		{
-			protected override string Map { get; } = "training1";
+			protected override string Map { get; set; } = "training1";
 		}
 
 		[TestClass]
 		public class training2Map : RandomizerTests
 		{
-			protected override string Map { get; } = "training2";
+			protected override string Map { get; set; } = "training2";
+		}
+
+		[TestClass]
+		public abstract class Strategy : RandomizerTests
+		{
+			protected abstract TurnStrategyBase GetStrategy();
+
+
+			[TestMethod]
+			public virtual void training1()
+			{
+				Map = "training1";
+				var strategy = GetStrategy();
+				var score = _runner.Run(strategy);
+				Assert.IsTrue(score.FinalScore > 0);
+			}
+
+			[TestMethod]
+			public virtual void training2()
+			{
+				Map = "training2";
+				var strategy = GetStrategy();
+				var score = _runner.Run(strategy);
+				Assert.IsTrue(score.FinalScore > 0);
+			}
+			
+			[TestClass]
+			public class Default : Strategy
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					return null;
+				}
+			}
+
+			[TestClass]
+			public class Custom : Strategy
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = TurnStrategyBase
+						.Create<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>();
+					return strategy;
+				}
+			}
 		}
 	}
 }
