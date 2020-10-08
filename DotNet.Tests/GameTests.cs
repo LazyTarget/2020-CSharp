@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using DotNet.Logging;
 using DotNet.Strategy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
@@ -27,16 +29,22 @@ namespace DotNet.Tests
 		{
 			_loggerFactory = new Lazy<ILoggerFactory>(() =>
 			{
-				_output = new StringBuilder();
-
 				var loggerFilterOptions = new LoggerFilterOptions
 				{
 					MinLevel = LogLevel.Information,
 				};
+				var providers = new List<ILoggerProvider>();
 				if (Debugger.IsAttached)
+				{
+					providers.Add(new DebugLoggerProvider());
 					loggerFilterOptions.MinLevel = LogLevel.Debug;
-
-				var loggerFactory = new LoggerFactory(new[] {new InMemoryLoggerProvider(_output)}, loggerFilterOptions);
+				}
+				else
+				{
+					_output = new StringBuilder();
+					providers.Add(new InMemoryLoggerProvider(_output));
+				}
+				var loggerFactory = new LoggerFactory(providers, loggerFilterOptions);
 				return loggerFactory;
 			});
 		}
@@ -54,8 +62,9 @@ namespace DotNet.Tests
 		{
 			_runner?.EndGame();
 
-			var fullLog = _output.ToString();
-			Debug.WriteLine(fullLog);
+			var fullLog = _output?.ToString();
+			if (!string.IsNullOrWhiteSpace(fullLog))
+				Debug.WriteLine(fullLog);
 		}
 
 		protected virtual GameRunner GetRunner(string map = null)
