@@ -159,6 +159,15 @@ namespace DotNet.Tests
 				AssertScore(score);
 			}
 
+			[TestMethod]
+			[TestCategory("Map_Visby")]
+			public virtual void Map_Visby()
+			{
+				Map = "Visby";
+				var score = Run(Map);
+				AssertScore(score);
+			}
+
 			#region Strategies
 
 			[TestClass]
@@ -171,7 +180,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			[TestCategory("Map_Gothenburg")]
+			[TestCategory("TargetedToMap_Gothenburg")]
 			public class Gothenburg_1 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -197,7 +206,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			[TestCategory("Map_Gothenburg")]
+			[TestCategory("TargetedToMap_Gothenburg")]
 			public class Gothenburg_2 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -223,7 +232,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			[TestCategory("Map_Gothenburg")]
+			[TestCategory("TargetedToMap_Gothenburg")]
 			public class Gothenburg_3 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -249,7 +258,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			[TestCategory("Map_Gothenburg")]
+			[TestCategory("TargetedToMap_Gothenburg")]
 			public class Gothenburg_4 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -275,7 +284,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			[TestCategory("Map_Kiruna")]
+			[TestCategory("TargetedToMap_Kiruna")]
 			public class Kiruna_1 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -301,7 +310,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			[TestCategory("Map_Kiruna")]
+			[TestCategory("TargetedToMap_Kiruna")]
 			public class Kiruna_2 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -327,7 +336,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			[TestCategory("Map_Kiruna")]
+			[TestCategory("TargetedToMap_Kiruna")]
 			public class Kiruna_3 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -353,7 +362,7 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
-			[TestCategory("Map_Kiruna")]
+			[TestCategory("TargetedToMap_Kiruna")]
 			public class Kiruna_4 : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -373,6 +382,121 @@ namespace DotNet.Tests
 						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 						.Append<AdjustBuildingTemperaturesTurnStrategy>()
 						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Apartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			[TestCategory("TargetedToMap_Visby")]
+			public class Visby_1 : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 5;
+						})
+						.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new[] { "WindTurbine", "SolarPanel" })
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Apartments")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			[TestCategory("TargetedToMap_Visby")]
+			public class Visby_2 : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 10;
+						})
+						.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new[] { "WindTurbine", "SolarPanel" })
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			[TestCategory("TargetedToMap_Visby")]
+			public class Visby_3 : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Mall";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 5;
+						})
+						.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new[] { "WindTurbine", "SolarPanel" })
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "EnvironmentalHouse")
+						.Compile();
+					return strategy;
+				}
+			}
+
+
+			[TestClass]
+			[TestCategory("TargetedToMap_Visby")]
+			public class Visby_4 : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Park";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+						{
+							c.BuildingName = "Mall";
+							c.MaxNumberOfBuildings = 2;
+						})
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c =>
+						{
+							c.MaxNumberOfResidences = 5;
+						})
+						.Append<BuyUpgradeTurnStrategy>(c => c.IncludedUpgrades = new[] { "WindTurbine", "SolarPanel" })
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "HighRise")
 						.Compile();
 					return strategy;
 				}
