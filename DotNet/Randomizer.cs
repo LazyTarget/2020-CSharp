@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using DotNet.Interfaces;
 using DotNet.models;
@@ -24,12 +23,13 @@ namespace DotNet
 			if (strategy == null)
 			{
 				_strategy = TurnStrategyBase.Build(loggerFactory)
-						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
-						.Append<BuyUpgradeTurnStrategy>()
-						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
-						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
-						.Append<AdjustBuildingTemperaturesTurnStrategy>()
-						.Append<SingletonBuildingTurnStrategy>();
+					.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+					.Append<BuyUpgradeTurnStrategy>()
+					.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+					.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+					.Append<AdjustBuildingTemperaturesTurnStrategy>()
+					.Append<SingletonBuildingTurnStrategy>()
+					.Compile();
 			}
 			else
 			{

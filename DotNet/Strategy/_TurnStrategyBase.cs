@@ -10,6 +10,9 @@ namespace DotNet.Strategy
 		private ILoggerFactory _loggerFactory;
 		protected ILogger Logger { get; private set; }
 
+		private Func<GameState, bool> _predicate;
+		private Action<GameState, bool> _callback;
+
 		protected TurnStrategyBase(TurnStrategyBase parent = null)
 		{
 			_parent = parent;
@@ -17,9 +20,24 @@ namespace DotNet.Strategy
 
 		public virtual bool TryExecuteStrategy(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
-			var result = TryExecuteTurn(randomizer, gameLayer, state);
+			var result = _predicate == null || _predicate(state);
+			if (result)
+			{
+				// Has no predicate or has meet the requirements
+				result = TryExecuteTurn(randomizer, gameLayer, state);
+			}
+
 			if (!result && _parent != null)
+			{
+				// Could not execute, continue with the parent
 				result = _parent.TryExecuteStrategy(randomizer, gameLayer, state);
+			}
+
+			// Make a callback that the strategy has succeeded
+			if (_callback != null)
+			{
+				_callback?.Invoke(state, result);
+			}
 			return result;
 		}
 
@@ -56,16 +74,24 @@ namespace DotNet.Strategy
 				_loggerFactory = loggerFactory;
 			}
 
-			public T Append<T>(Action<T> configure = null)
+			public StrategyBuilder Append<T>(Action<T> configureStrategy = null, Func<GameState, bool> predicate = null, Action<GameState, bool> callback = null)
 				where T : TurnStrategyBase, new()
 			{
 				var strategy = new T();
 				strategy._parent = _current;
+				strategy._predicate = predicate;
+				strategy._callback = callback;
 				strategy._loggerFactory = _loggerFactory;
 				strategy.Logger = _loggerFactory.CreateLogger<T>();
 
-				configure?.Invoke(strategy);
-				return strategy;
+				configureStrategy?.Invoke(strategy);
+				_current = strategy;
+				return this;
+			}
+
+			public TurnStrategyBase Compile()
+			{
+				return _current;
 			}
 		}
 	}

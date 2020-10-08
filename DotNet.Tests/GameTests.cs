@@ -115,7 +115,8 @@ namespace DotNet.Tests
 				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 				.Append<AdjustBuildingTemperaturesTurnStrategy>()
-				.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin");
+				.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
+				.Compile();
 
 			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
@@ -239,8 +240,9 @@ namespace DotNet.Tests
 				.Append<BuyUpgradeTurnStrategy>()
 				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
-				.Append<AdjustBuildingTemperaturesTurnStrategy>();
-				//.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin");
+				.Append<AdjustBuildingTemperaturesTurnStrategy>()
+				//.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
+				.Compile();
 
 			var score = GetRunner().Run(strategy);
 			Assert.IsTrue(score.FinalScore > 0);
@@ -308,8 +310,9 @@ namespace DotNet.Tests
 						.Append<BuyUpgradeTurnStrategy>()
 						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
-						.Append<AdjustBuildingTemperaturesTurnStrategy>();
-						//.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin");
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						//.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
+						.Compile();
 					return strategy;
 				}
 			}
@@ -325,7 +328,8 @@ namespace DotNet.Tests
 						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
 						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
 						.Append<AdjustBuildingTemperaturesTurnStrategy>()
-						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin");
+						.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
+						.Compile();
 					return strategy;
 				}
 			}
