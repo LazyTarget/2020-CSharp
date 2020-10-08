@@ -82,15 +82,28 @@ namespace DotNet
 			}
 
 			state = GameLayer.GetState();
+			var score = GameLayer.GetScore(state.GameId);
+
 			_logger.LogInformation("");
 			_logger.LogInformation("");
 			_logger.LogInformation($"Done with game: {state.GameId}");
+			_logger.LogInformation("");
+			_logger.LogInformation($"::SUMMARY::");
 			_logger.LogInformation($"Funds: {state.Funds}");
 			_logger.LogInformation($"Buildings: {state.GetCompletedBuildings().Count()}");
 			_logger.LogInformation($"Upgrades: {state.GetCompletedBuildings().Sum(x => x.Effects.Count)}");
-
-			var score = GameLayer.GetScore(state.GameId);
 			_logger.LogInformation("");
+			_logger.LogInformation($"::ACTIONS::");
+			foreach (GameActions action in Enum.GetValues(typeof(GameActions)))
+			{
+				var count = state.ActionHistory.Count(x => x.Value == action);
+				if (count < 1)
+					continue;
+				var percent = count / (double) state.ActionHistory.Count;
+				_logger.LogInformation($"\t{percent:P1}\t {action} ({count}/{state.ActionHistory.Count})");
+			}
+			_logger.LogInformation("");
+			_logger.LogInformation($"::SCORE::");
 			_logger.LogInformation($"Final score: {score.FinalScore}");
 			_logger.LogInformation($"Co2: {score.TotalCo2}");
 			_logger.LogInformation($"Pop: {score.FinalPopulation}");

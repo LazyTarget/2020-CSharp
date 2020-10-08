@@ -61,7 +61,7 @@ namespace DotNet
             var response = _api.Build(position, gameId);
 
             _gameState.UpdateState(response.Result);
-            _gameState.UpdateActions(response.Result, GameActions.StartBuild);
+            _gameState.UpdateActions(response.Result, GameActions.Build);
         }
 
         ///  <summary> Destroys the building.</summary>
