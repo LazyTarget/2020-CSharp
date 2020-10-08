@@ -143,7 +143,7 @@ namespace DotNet.Strategy
 					_degreesPerPop * building.CurrentPop -
 					(building.Temperature - outdoorTemp) * blueprint.Emissivity;
 
-				Logger.LogDebug($"{building.BuildingName} at {{{building.Position}}}");
+				Logger.LogDebug($"{building.BuildingName} at {building.Position}");
 				Logger.LogDebug($"Current building temp: \t\t{building.Temperature:N3}");
 				Logger.LogDebug($"Next building temp: \t\t{newTemp:N3}");
 				Logger.LogDebug($"Predicted New Temp: \t\t{predictedNewTemp:N3}");
@@ -182,7 +182,7 @@ namespace DotNet.Strategy
 
 				if (state.Funds < _adjustCost)
 				{
-					Logger.LogWarning($"Wanted to apply energy '{energy}' to building at {{{building.Position}}}, but has insufficient funds");
+					Logger.LogWarning($"Wanted to apply energy '{energy}' to building at {building.Position}, but has insufficient funds");
 					return false;
 				}
 
