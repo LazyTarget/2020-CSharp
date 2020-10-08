@@ -39,7 +39,7 @@ namespace DotNet.Strategy
 			{
 				_callback?.Invoke(state, result, globalResult);
 			}
-			return result;
+			return globalResult;
 		}
 
 		protected abstract bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state);
