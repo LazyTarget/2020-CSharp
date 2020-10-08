@@ -25,8 +25,16 @@ namespace DotNet
 			if (strategy == null)
 			{
 				_strategy = TurnStrategyBase.Build(loggerFactory)
-					.Append<BuildUtilityCloseToResidencesTurnStrategy>(c => c.BuildingName = "Mall")
-					.Append<BuildUtilityCloseToResidencesTurnStrategy>(c => c.BuildingName = "Park")
+					.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+					{
+						c.BuildingName = "Mall";
+						c.MaxNumberOfBuildings = 3;
+					})
+					.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+					{
+						c.BuildingName = "Park";
+						c.MaxNumberOfBuildings = 2;
+					})
 					.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
 					.Append<BuyUpgradeTurnStrategy>()
 					.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()

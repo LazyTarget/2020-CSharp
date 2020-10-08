@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-[assembly: Parallelize(Workers = 2, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 3, Scope = ExecutionScope.MethodLevel)]
 
 namespace DotNet.Tests
 {
@@ -168,6 +168,25 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			public class WithoutStartBuildOnTurnZero_WithUtility : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = StrategyBuilder()
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c => c.BuildingName = "Mall")
+						.Append<BuildUtilityCloseToResidencesTurnStrategy>(c => c.BuildingName = "Park")
+						.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
+						.Append<BuyUpgradeTurnStrategy>()
+						.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
+						.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
+						.Append<AdjustBuildingTemperaturesTurnStrategy>()
+						//.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
+						.Compile();
+					return strategy;
+				}
+			}
+
+			[TestClass]
 			public class SingletonApartments : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
@@ -241,6 +260,16 @@ namespace DotNet.Tests
 			protected TurnStrategyBase BuildSingletonStrategy(string buildingName)
 			{
 				var strategy = StrategyBuilder()
+					.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+					{
+						c.BuildingName = "Mall";
+						c.MaxNumberOfBuildings = 1;
+					})
+					.Append<BuildUtilityCloseToResidencesTurnStrategy>(c =>
+					{
+						c.BuildingName = "Park";
+						c.MaxNumberOfBuildings = 2;
+					})
 					//.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
 					.Append<BuyUpgradeTurnStrategy>()
 					.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()

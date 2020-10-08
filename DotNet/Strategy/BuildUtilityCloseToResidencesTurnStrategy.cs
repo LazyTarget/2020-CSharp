@@ -19,7 +19,7 @@ namespace DotNet.Strategy
 
 		public string BuildingName { get; set; } = "Park";
 
-		public int MaxNumberOfBuildings { get; set; } = 2;
+		public int MaxNumberOfBuildings { get; set; } = 3;
 
 		protected override bool TryExecuteTurn(Randomizer randomizer, IGameLayer gameLayer, GameState state)
 		{
