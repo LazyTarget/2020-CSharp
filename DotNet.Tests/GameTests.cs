@@ -106,134 +106,6 @@ namespace DotNet.Tests
 		}
 
 		[TestMethod]
-		public void Default_Apartments()
-		{
-			var buildingName = "Apartments";
-
-			var strategy = StrategyBuilder()
-				.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>(c => c.BuildingName = buildingName)
-				.Append<BuyUpgradeTurnStrategy>()
-				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
-				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
-				.Append<AdjustBuildingTemperaturesTurnStrategy>()
-				.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
-				.Compile();
-
-			var score = GetRunner().Run(strategy);
-			Assert.IsTrue(score.FinalScore > 0);
-		}
-
-		[TestMethod]
-		public void Default_ModernApartments()
-		{
-			var buildingName = "ModernApartments";
-
-			TurnStrategyBase strategy = null;
-			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
-			{
-				BuildingName = buildingName,
-			};
-			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
-			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
-			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new SingletonBuildingTurnStrategy(strategy)
-			{
-				BuildingName = "Cabin",
-			};
-
-			var score = GetRunner().Run(strategy);
-			Assert.IsTrue(score.FinalScore > 0);
-		}
-
-		[TestMethod]
-		public void Default_Cabin()
-		{
-			var buildingName = "Cabin";
-
-			TurnStrategyBase strategy = null;
-			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
-			{
-				BuildingName = buildingName,
-			};
-			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
-			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
-			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new SingletonBuildingTurnStrategy(strategy)
-			{
-				BuildingName = "Cabin",
-			};
-
-			var score = GetRunner().Run(strategy);
-			Assert.IsTrue(score.FinalScore > 0);
-		}
-
-		[TestMethod]
-		public void Default_EnvironmentalHouse()
-		{
-			var buildingName = "EnvironmentalHouse";
-
-			TurnStrategyBase strategy = null;
-			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
-			{
-				BuildingName = buildingName,
-			};
-			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
-			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
-			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new SingletonBuildingTurnStrategy(strategy)
-			{
-				BuildingName = "Cabin",
-			};
-
-			var score = GetRunner().Run(strategy);
-			Assert.IsTrue(score.FinalScore > 0);
-		}
-
-		[TestMethod]
-		public void Default_HighRise()
-		{
-			var buildingName = "HighRise";
-
-			TurnStrategyBase strategy = null;
-			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
-			{
-				BuildingName = buildingName,
-			};
-			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
-			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
-			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new SingletonBuildingTurnStrategy(strategy)
-			{
-				BuildingName = "Cabin",
-			};
-
-			var score = GetRunner().Run(strategy);
-			Assert.IsTrue(score.FinalScore > 0);
-		}
-
-		[TestMethod]
-		public void Default_LuxuryResidence()
-		{
-			var buildingName = "LuxuryResidence";
-
-			TurnStrategyBase strategy = null;
-			strategy = new BuildBuildingWhenCloseToPopMaxTurnStrategy(strategy)
-			{
-				BuildingName = buildingName,
-			};
-			strategy = new MaintenanceWhenBuildingIsGettingDamagedTurnStrategy(strategy);
-			strategy = new BuildWhenHasBuildingsUnderConstructionTurnStrategy(strategy);
-			strategy = new AdjustBuildingTemperaturesTurnStrategy(strategy);
-			strategy = new SingletonBuildingTurnStrategy(strategy)
-			{
-				BuildingName = "Cabin",
-			};
-
-			var score = GetRunner().Run(strategy);
-			Assert.IsTrue(score.FinalScore > 0);
-		}
-
-		[TestMethod]
 		public void WithoutStartBuildOnTurnZero()
 		{
 			var strategy = StrategyBuilder()
@@ -319,11 +191,61 @@ namespace DotNet.Tests
 			}
 
 			[TestClass]
+			public class SingletonApartments : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = BuildSingletonStrategy("Apartments");
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class SingletonModernApartments : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = BuildSingletonStrategy("ModernApartments");
+					return strategy;
+				}
+			}
+
+			[TestClass]
 			public class SingletonCabin : StrategyTests
 			{
 				protected override TurnStrategyBase GetStrategy()
 				{
 					var strategy = BuildSingletonStrategy("Cabin");
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class SingletonEnvironmentalHouse : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = BuildSingletonStrategy("EnvironmentalHouse");
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class SingletonHighRise : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = BuildSingletonStrategy("HighRise");
+					return strategy;
+				}
+			}
+
+			[TestClass]
+			public class SingletonLuxuryResidence : StrategyTests
+			{
+				protected override TurnStrategyBase GetStrategy()
+				{
+					var strategy = BuildSingletonStrategy("LuxuryResidence");
 					return strategy;
 				}
 			}
