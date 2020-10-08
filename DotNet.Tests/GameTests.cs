@@ -90,50 +90,6 @@ namespace DotNet.Tests
 			}
 		}
 
-		protected virtual TurnStrategyBase.StrategyBuilder StrategyBuilder()
-		{
-			var builder = TurnStrategyBase.Build(_loggerFactory.Value);
-			return builder;
-		}
-
-
-		[TestMethod]
-		public void DefaultStrategy()
-		{
-			var runner = GetRunner();
-			var score = runner.Run();
-			Assert.IsTrue(score.FinalScore > 0);
-		}
-
-		[TestMethod]
-		public void WithoutStartBuildOnTurnZero()
-		{
-			var strategy = StrategyBuilder()
-				.Append<BuildBuildingWhenCloseToPopMaxTurnStrategy>()
-				.Append<BuyUpgradeTurnStrategy>()
-				.Append<MaintenanceWhenBuildingIsGettingDamagedTurnStrategy>()
-				.Append<BuildWhenHasBuildingsUnderConstructionTurnStrategy>()
-				.Append<AdjustBuildingTemperaturesTurnStrategy>()
-				//.Append<SingletonBuildingTurnStrategy>(c => c.BuildingName = "Cabin")
-				.Compile();
-
-			var score = GetRunner().Run(strategy);
-			Assert.IsTrue(score.FinalScore > 0);
-		}
-
-
-		[TestClass]
-		public class training1Map : GameTests
-		{
-			protected override string Map { get; set; } = "training1";
-		}
-
-		[TestClass]
-		public class training2Map : GameTests
-		{
-			protected override string Map { get; set; } = "training2";
-		}
-
 
 		[TestClass]
 		public abstract class StrategyTests : GameTests
@@ -254,6 +210,12 @@ namespace DotNet.Tests
 
 
 			#region Helpers
+
+			protected virtual TurnStrategyBase.StrategyBuilder StrategyBuilder()
+			{
+				var builder = TurnStrategyBase.Build(_loggerFactory.Value);
+				return builder;
+			}
 
 			protected TurnStrategyBase BuildSingletonStrategy(string buildingName)
 			{
