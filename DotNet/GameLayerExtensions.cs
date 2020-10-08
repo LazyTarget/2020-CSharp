@@ -28,6 +28,58 @@ namespace DotNet
 			}
 		}
 
+		public static IEnumerable<Position> GetAdjacentPositions(this Position position)
+		{
+			yield return new Position(position.x - 1, position.y - 1);
+			yield return new Position(position.x, position.y - 1);
+			yield return new Position(position.x + 1, position.y - 1);
+			
+			yield return new Position(position.x - 1, position.y);
+			//yield return new Position(position.x, position.y);
+			yield return new Position(position.x + 1, position.y);
+
+			yield return new Position(position.x - 1, position.y + 1);
+			yield return new Position(position.x, position.y + 1);
+			yield return new Position(position.x +- 1, position.y + 1);
+		}
+
+		public static int CalculatePositionAvailability(this GameState state, Position position, int radius = 1)
+		{
+			var rating = 0;
+			var buildings = state.GetBuiltBuildings().ToArray();
+			for (var i = position.x - radius; i < position.x + radius; i++)
+			{
+				if (i < 0)
+					continue;
+				if (i >= state.Map.Length)
+					continue;
+
+				for (var j = position.y - radius; j < position.y + radius; j++)
+				{
+					if (j < 0)
+						continue;
+					if (i >= state.Map[i].Length)
+						continue;
+					if (i == position.x && j == position.y)
+						continue;
+
+					var blockedByTerrain = state.Map[i][j] != 0;
+					if (blockedByTerrain)
+						continue;
+
+					var blockedByBuilding = buildings.Any(x => x.Position.ToString() == position.ToString());
+					if (blockedByBuilding)
+					{
+						// Bonus points for adjacent buildings
+						rating++;
+					}
+
+					rating++;
+				}
+			}
+			return rating;
+		}
+
 		public static void ExecuteAction(this IGameLayer gameLayer, GameActions action)
 		{
 			if (action == GameActions.Wait)

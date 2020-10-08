@@ -63,7 +63,7 @@ namespace DotNet.Strategy
 			}
 
 
-			var position = randomizer.GetRandomBuildablePosition();
+			var position = randomizer.GetRandomBuildablePositionNearResidence();
 			if (position == null)
 			{
 				Logger.LogWarning("No valid positions to build utility building");

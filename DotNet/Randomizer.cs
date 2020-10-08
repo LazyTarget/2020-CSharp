@@ -108,6 +108,51 @@ namespace DotNet
 			return position;
 		}
 
+		public Position GetRandomBuildablePositionWithLotsOfSpace()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Position GetRandomBuildablePositionNearResidence()
+		{
+			int? scoreR1 = null;
+			int? scoreR2 = null;
+			Position bestPosition = null;
+
+			var builtBuildings = _gameState.GetBuiltBuildings().OfType<BuiltResidenceBuilding>().ToArray();
+			foreach (var building in builtBuildings)
+			{
+				var adjacentPositions = building.Position.GetAdjacentPositions();
+				foreach (var pos in adjacentPositions)
+				{
+					var score = _gameState.CalculatePositionAvailability(pos);
+					if (scoreR1.HasValue && score < scoreR1.Value)
+					{
+						// Not better than previous R1
+						continue;
+					}
+					
+					if (scoreR1.HasValue && score == scoreR1.Value)
+					{
+						scoreR1 = score;
+						score = _gameState.CalculatePositionAvailability(pos, radius: 2);
+
+						if (scoreR2.HasValue && score < scoreR2.Value)
+						{
+							// Not better than previous R2
+							continue;
+						}
+
+						scoreR2 = score;
+					}
+
+					scoreR1 = score;
+					bestPosition = pos;
+				}
+			}
+			return bestPosition;
+		}
+
 		public GameActions GetRandomAction(Func<GameActions, bool> predicate = null)
 		{
 			var actions = _gameLayer.GetPossibleActions(includeWait: false).ToArray();
