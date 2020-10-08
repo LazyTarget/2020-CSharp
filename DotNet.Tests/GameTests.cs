@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-//[assembly: Parallelize(Workers = 2, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 2, Scope = ExecutionScope.MethodLevel)]
 
 namespace DotNet.Tests
 {
@@ -37,7 +37,7 @@ namespace DotNet.Tests
 			if (Debugger.IsAttached)
 			{
 				providers.Add(new DebugLoggerProvider());
-				loggerFilterOptions.MinLevel = LogLevel.Debug;
+				loggerFilterOptions.MinLevel = LogLevel.Trace;
 			}
 			else
 			{
