@@ -63,7 +63,7 @@ namespace DotNet.Strategy
 					predictedTrend = predictedTrend.Value * 2;
 
 					outdoorTemp = state.CurrentTemp + predictedTrend.Value;
-					Logger.LogDebug($"Using prediction for OutdoorTemp: {outdoorTemp}, CurrentTemp: {state.CurrentTemp}");
+					Logger.LogTrace($"Using prediction for OutdoorTemp: {outdoorTemp}, CurrentTemp: {state.CurrentTemp}");
 				}
 			}
 
@@ -143,12 +143,12 @@ namespace DotNet.Strategy
 					_degreesPerPop * building.CurrentPop -
 					(building.Temperature - outdoorTemp) * blueprint.Emissivity;
 
-				Logger.LogDebug($"{building.BuildingName} at {building.Position}");
-				Logger.LogDebug($"Current building temp: \t\t{building.Temperature:N3}");
-				Logger.LogDebug($"Next building temp: \t\t{newTemp:N3}");
-				Logger.LogDebug($"Predicted New Temp: \t\t{predictedNewTemp:N3}");
-				Logger.LogDebug($"Current building energy: \t{building.EffectiveEnergyIn}/{building.RequestedEnergyIn} Mwh");
-				Logger.LogDebug($"New requested energy: \t\t{energy:N3} Mwh");
+				Logger.LogTrace($"{building.BuildingName} at {building.Position}");
+				Logger.LogTrace($"Current building temp: \t\t{building.Temperature:N3}");
+				Logger.LogTrace($"Next building temp: \t\t\t{newTemp:N3}");
+				Logger.LogTrace($"Predicted New Temp: \t\t\t{predictedNewTemp:N3}");
+				Logger.LogTrace($"Current building energy: \t{building.EffectiveEnergyIn}/{building.RequestedEnergyIn} Mwh");
+				Logger.LogTrace($"New requested energy: \t\t{energy:N3} Mwh");
 
 				if (newTemp < TargetTemperature)
 				{
@@ -183,9 +183,10 @@ namespace DotNet.Strategy
 				if (state.Funds < _adjustCost)
 				{
 					Logger.LogWarning($"Wanted to apply energy '{energy}' to building at {building.Position}, but has insufficient funds");
-					return false;
+					continue;
 				}
 
+				Logger.LogInformation($"Adjusting energy for {building.Position} from {building.RequestedEnergyIn} to {energy:N1} (TEMP:: current={building.Temperature:N3}, predicted={predictedNewTemp:N3})");
 				gameLayer.AdjustEnergy(building.Position, energy, state.GameId);
 				return true;
 			}

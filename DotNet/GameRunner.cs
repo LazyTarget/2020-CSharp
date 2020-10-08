@@ -62,25 +62,20 @@ namespace DotNet
 		public ScoreResponse Run(TurnStrategyBase strategy = null)
 		{
 			// Make actions
-			GameState state;
+			GameState state = GameLayer.GetState();
 			var randomizer = new Randomizer(GameLayer, _loggerFactory, strategy);
-			while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
+			while (state.Turn < state.MaxTurns)
 			{
-				state = GameLayer.GetState();
 				PrintDebug_NewTurn(state);
 
 				randomizer.HandleTurn();
 
-				//take_turn(gameId);
-
-				foreach (var message in GameLayer.GetState().Messages)
+				foreach (var message in state.Messages)
 				{
 					_logger.LogInformation(message);
-					//if (Debugger.IsAttached)
-					//	Debug.WriteLine(message);
 				}
 
-				foreach (var error in GameLayer.GetState().Errors)
+				foreach (var error in state.Errors)
 				{
 					_logger.LogError("Error: " + error);
 				}
