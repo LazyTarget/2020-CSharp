@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using DotNet.Interfaces;
 using DotNet.models;
 
@@ -28,6 +29,41 @@ namespace DotNet
 			}
 		}
 
+
+		public static bool IsBuildablePosition(this GameState state, Position pos)
+		{
+			if (pos.x < 0 || pos.y < 0)
+				return false;
+			if (pos.x >= state.Map.Length)
+				return false;
+			if (pos.y >= state.Map[pos.x].Length)
+				return false;
+
+			if (state.Map[pos.x][pos.y] != 0)
+				return false;
+
+			var blockingBuilding = state.GetBuiltBuildings().FirstOrDefault(x => x.Position.ToString() == pos.ToString());
+			if (blockingBuilding != null)
+				return false;
+
+			return true;
+		}
+
+		public static string MapToString(this GameState state)
+		{
+			var sb = new StringBuilder();
+			for(var i = 0; i < state.Map.Length; i++)
+			{
+				for (var j = 0; j < state.Map[i].Length; j++)
+				{
+					var t = state.Map[i][j];
+					sb.Append(t);
+				}
+				sb.AppendLine();
+			}
+			return sb.ToString();
+		}
+
 		public static IEnumerable<Position> GetAdjacentPositions(this Position position)
 		{
 			yield return new Position(position.x - 1, position.y - 1);
@@ -43,7 +79,7 @@ namespace DotNet
 			yield return new Position(position.x +- 1, position.y + 1);
 		}
 
-		public static int CalculatePositionAvailability(this GameState state, Position position, int radius = 1)
+		public static int CalculatePositionAvailability(this GameState state, Position position, int radius = 1, bool bonusForBuildings = false)
 		{
 			var rating = 0;
 			var buildings = state.GetBuiltBuildings().ToArray();
@@ -70,8 +106,15 @@ namespace DotNet
 					var blockedByBuilding = buildings.Any(x => x.Position.ToString() == position.ToString());
 					if (blockedByBuilding)
 					{
-						// Bonus points for adjacent buildings
-						rating++;
+						if (bonusForBuildings)
+						{
+							// Bonus points for adjacent buildings
+							rating++;
+						}
+						else
+						{
+							continue;
+						}
 					}
 
 					rating++;

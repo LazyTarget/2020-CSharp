@@ -103,7 +103,9 @@ namespace DotNet
 		
 		public Position GetRandomBuildablePosition()
 		{
-			var positions = _gameState.GetBuildablePositions().ToArray();
+			var positions = _gameState.GetBuildablePositions()
+				.Where(_gameState.IsBuildablePosition)
+				.ToArray();
 			var position = positions.ElementAtOrDefault(Random.Next(0, positions.Length));
 			return position;
 		}
@@ -125,7 +127,12 @@ namespace DotNet
 				var adjacentPositions = building.Position.GetAdjacentPositions();
 				foreach (var pos in adjacentPositions)
 				{
-					var score = _gameState.CalculatePositionAvailability(pos);
+					if (!_gameState.IsBuildablePosition(pos))
+						continue;
+					if (builtBuildings.Any(x => x.Position.ToString() == pos.ToString()))
+						continue;
+
+					var score = _gameState.CalculatePositionAvailability(pos, bonusForBuildings: false);
 					if (scoreR1.HasValue && score < scoreR1.Value)
 					{
 						// Not better than previous R1
@@ -135,7 +142,7 @@ namespace DotNet
 					if (scoreR1.HasValue && score == scoreR1.Value)
 					{
 						scoreR1 = score;
-						score = _gameState.CalculatePositionAvailability(pos, radius: 2);
+						score = _gameState.CalculatePositionAvailability(pos, radius: 2, bonusForBuildings: true);
 
 						if (scoreR2.HasValue && score < scoreR2.Value)
 						{
