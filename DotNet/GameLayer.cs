@@ -110,7 +110,7 @@ namespace DotNet
             var response = _api.BuyUpgrade(body, gameId);
 
             _gameState.UpdateState(response.Result);
-            _gameState.UpdateActions(response.Result, GameActions.Wait);
+            _gameState.UpdateActions(response.Result, GameActions.BuyUpgrade);
         }
 
         ///  <summary> Adjusts the energy on the specific buildings.</summary>
