@@ -34,6 +34,7 @@ namespace DotNet
         {
             var state = _api.StartGame(gameId);
             _gameState.UpdateState(state.Result);
+            _gameState.ActionHistory?.Clear();
         }
 
         /// <summary> Place a foundation.</summary>
@@ -47,6 +48,7 @@ namespace DotNet
                              JsonConvert.SerializeObject(buildingName) + "}";
             var response = _api.StartBuild(foundation, gameId);
             _gameState.UpdateState(response.Result);
+            _gameState.UpdateActions(response.Result, GameActions.StartBuild);
         }
 
         /// <summary> Creates a new game.</summary>
@@ -56,8 +58,10 @@ namespace DotNet
         public void Build(Position pos, string gameId = null)
         {
             var position = "{\"position\":" + JsonConvert.SerializeObject(pos) + "}";
+            var response = _api.Build(position, gameId);
 
-            _gameState.UpdateState(_api.Build(position, gameId).Result);
+            _gameState.UpdateState(response.Result);
+            _gameState.UpdateActions(response.Result, GameActions.StartBuild);
         }
 
         ///  <summary> Destroys the building.</summary>
@@ -66,7 +70,10 @@ namespace DotNet
         public void Demolish(Position pos, string gameId = null)
         {
             var position = "{\"position\":" + JsonConvert.SerializeObject(pos) + "}";
-            _gameState.UpdateState(_api.Demolish(position, gameId).Result);
+            var response = _api.Demolish(position, gameId);
+            
+            _gameState.UpdateState(response.Result);
+            _gameState.UpdateActions(response.Result, GameActions.Demolish);
         }
 
         ///  <summary> Increases the building's health points.</summary>
@@ -75,7 +82,10 @@ namespace DotNet
         public void Maintenance(Position pos, string gameId = null)
         {
             var position = "{\"position\":" + JsonConvert.SerializeObject(pos) + "}";
-            _gameState.UpdateState(_api.Maintenance(position, gameId).Result);
+            var response = _api.Maintenance(position, gameId);
+
+            _gameState.UpdateState(response.Result);
+            _gameState.UpdateActions(response.Result, GameActions.Maintenance);
         }
 
         /// <summary> Waits one tick.</summary>
@@ -83,7 +93,9 @@ namespace DotNet
         public void Wait(string gameId = null)
         {
             var state = _api.Wait(gameId).Result;
+
             _gameState.UpdateState(state);
+            _gameState.UpdateActions(state, GameActions.Wait);
         }
 
         ///  <summary> Buys an upgrade on the specific building.</summary>
@@ -95,7 +107,10 @@ namespace DotNet
         {
             var body = "{\"position\":" + JsonConvert.SerializeObject(pos) + ",\"upgradeAction\":" +
                        JsonConvert.SerializeObject(upgrade) + "}";
-            _gameState.UpdateState(_api.BuyUpgrade(body, gameId).Result);
+            var response = _api.BuyUpgrade(body, gameId);
+
+            _gameState.UpdateState(response.Result);
+            _gameState.UpdateActions(response.Result, GameActions.Wait);
         }
 
         ///  <summary> Adjusts the energy on the specific buildings.</summary>
@@ -107,8 +122,10 @@ namespace DotNet
             var positionJson = JsonConvert.SerializeObject(position);
             var valueJson = JsonConvert.SerializeObject(value);
             var body = "{ \"position\":" + positionJson + " ,\"value\":" + valueJson + "}";
+            var response = _api.AdjustEnergy(body, gameId);
 
-            _gameState.UpdateState(_api.AdjustEnergy(body, gameId).Result);
+            _gameState.UpdateState(response.Result);
+            _gameState.UpdateActions(response.Result, GameActions.AdjustEnergy);
         }
 
         /// <summary> Gets the score for the specified game.</summary>

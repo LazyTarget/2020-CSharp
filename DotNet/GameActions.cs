@@ -10,5 +10,7 @@
 		Build,
 		Maintenance,
 		BuyUpgrade,
+		AdjustEnergy,
+		Demolish,
 	}
 }

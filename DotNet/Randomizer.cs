@@ -52,7 +52,7 @@ namespace DotNet
 			//var action = GetRandomAction();
 			//HandleAction(action);
 
-			_logger.LogWarning("No strategy executed, invoking Wait as fallback");
+			_logger.LogTrace("No strategy executed, invoking Wait as fallback");
 			_gameLayer.ExecuteAction(GameActions.Wait);
 		}
 
