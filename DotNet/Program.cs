@@ -12,7 +12,7 @@ namespace DotNet
     {
         private const string ApiKey = "";           // TODO: Enter your API key
         // The different map names can be found on considition.com/rules
-        private const string Map = "Visby";     // TODO: Enter your desired map
+        private const string Map = "London";     // TODO: Enter your desired map
         private static GameLayer GameLayer;
 
         public static void Main(string[] args)

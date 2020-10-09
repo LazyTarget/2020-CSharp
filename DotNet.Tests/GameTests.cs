@@ -125,6 +125,7 @@ namespace DotNet.Tests
 
 			[TestMethod]
 			[TestCategory("Map_training1")]
+			[Ignore("Disable during competition")]
 			public virtual void Map_training1()
 			{
 				Map = "training1";
@@ -134,6 +135,7 @@ namespace DotNet.Tests
 
 			[TestMethod]
 			[TestCategory("Map_training2")]
+			[Ignore("Disable during competition")]
 			public virtual void Map_training2()
 			{
 				Map = "training2";
@@ -164,6 +166,15 @@ namespace DotNet.Tests
 			public virtual void Map_Visby()
 			{
 				Map = "Visby";
+				var score = Run(Map);
+				AssertScore(score);
+			}
+
+			[TestMethod]
+			[TestCategory("Map_London")]
+			public virtual void Map_London()
+			{
+				Map = "London";
 				var score = Run(Map);
 				AssertScore(score);
 			}
