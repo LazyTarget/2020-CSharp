@@ -59,6 +59,20 @@ namespace DotNet
 
         public List<Upgrade> AvailableUpgrades { get; set; }
 
+        #region Custom
+        
+        public IDictionary<int, double> TemperatureHistory { get; set; }
+        public IDictionary<int, GameActions> ActionHistory { get; set; }
+
+        public void UpdateActions(GameStateResponse state, GameActions? action)
+        {
+            ActionHistory ??= new Dictionary<int, GameActions>();
+            if (action.HasValue)
+                ActionHistory[state.Turn] = action.Value;
+        }
+
+        #endregion Custom
+
 
         public void UpdateState(GameStateResponse state)
         {
@@ -73,6 +87,10 @@ namespace DotNet
             TotalCo2 = state.TotalCo2;
             TotalHappiness = state.TotalHappiness;
             UtilityBuildings = state.UtilityBuildings;
+
+            // Custom
+            TemperatureHistory ??= new Dictionary<int, double>();
+            TemperatureHistory[state.Turn] = state.CurrentTemp;
         }
 
         public override string ToString()

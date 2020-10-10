@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using DotNet.models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 
 namespace DotNet
@@ -9,21 +12,42 @@ namespace DotNet
     {
         private const string ApiKey = "";           // TODO: Enter your API key
         // The different map names can be found on considition.com/rules
-        private const string Map = "training1";     // TODO: Enter your desired map
-        private static readonly GameLayer GameLayer = new GameLayer(ApiKey);
+        private const string Map = "London";     // TODO: Enter your desired map
+        private static GameLayer GameLayer;
 
         public static void Main(string[] args)
         {
-            var gameId = GameLayer.NewGame(Map);
-            Console.WriteLine($"Starting game: {GameLayer.GetState().GameId}");
-            GameLayer.StartGame(gameId);
+            var loggerFactory = LoggerFactory.Create(c => c
+                .AddConsole()
+                .AddDebug()
+                .SetMinimumLevel(LogLevel.Debug));
 
-            while (GameLayer.GetState().Turn < GameLayer.GetState().MaxTurns)
+            // Init GameLayer
+            var apiKey = args.ElementAtOrDefault(0) ?? ApiKey;
+            while (string.IsNullOrWhiteSpace(apiKey))
             {
-                take_turn(gameId);
+                Console.Write("ApiKey: ");
+                apiKey = Console.ReadLine();
             }
-            Console.WriteLine($"Done with game: {GameLayer.GetState().GameId}");
-            Console.WriteLine(GameLayer.GetScore(gameId).FinalScore);
+            GameLayer = new GameLayer(apiKey);
+
+            // Init Game
+            GameRunner runner;
+            var gameId = args.ElementAtOrDefault(1);
+            if (gameId?.ToLower() == "new")
+            {
+	            runner = GameRunner.New(apiKey, Map, loggerFactory);
+            }
+            else
+            {
+	            runner = GameRunner.Resume(apiKey, gameId, loggerFactory);
+            }
+
+            var score = runner.Run();
+            //Console.WriteLine($"Final score: {score.FinalScore}");
+            //Console.WriteLine($"Co2: {score.TotalCo2}");
+            //Console.WriteLine($"Pop: {score.FinalPopulation}");
+            //Console.WriteLine($"Pop: {score.TotalHappiness}");
         }
 
         private static void take_turn(string gameId)
@@ -49,10 +73,8 @@ namespace DotNet
                     }
                 }
 
-                GameLayer.StartBuild(new Position(x, y), state.AvailableResidenceBuildings[0].BuildingName,
-                    gameId);
+                GameLayer.StartBuild(new Position(x, y), state.AvailableResidenceBuildings[0].BuildingName, gameId);
             }
-
             else
             {
                 var building = state.ResidenceBuildings[0];
@@ -61,7 +83,9 @@ namespace DotNet
                     GameLayer.Build(building.Position, gameId);
                 }
                 else if (!building.Effects.Contains(state.AvailableUpgrades[0].Name))
+                {
                     GameLayer.BuyUpgrade(building.Position, state.AvailableUpgrades[0].Name, gameId);
+                }
                 else if (building.Health < 50)
                 {
                     GameLayer.Maintenance(building.Position, gameId);
@@ -81,7 +105,10 @@ namespace DotNet
                         * bluePrint.Emissivity / 1 - 0.5 - building.CurrentPop * 0.04;
                     GameLayer.AdjustEnergy(building.Position, energy, gameId);
                 }
-                else GameLayer.Wait(gameId);
+                else
+                {
+                    GameLayer.Wait(gameId);
+                }
 
                 foreach (var message in GameLayer.GetState().Messages)
                 {
@@ -94,5 +121,6 @@ namespace DotNet
                 }
             }
         }
+
     }
 }

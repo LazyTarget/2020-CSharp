@@ -26,7 +26,7 @@ namespace DotNet.models
 
         public override string ToString()
         {
-            return ( x + ","+ y);
+            return $"[{x},{y}]";
         }
     }
 }

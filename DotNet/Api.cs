@@ -31,7 +31,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine();
                 Console.WriteLine("Fatal Error: could not start a new game");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameState>(result);
@@ -47,7 +49,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not start the game");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -65,7 +69,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not start build");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -82,7 +88,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(await response.Content.ReadAsStringAsync());
                 Console.WriteLine("Fatal Error: could not build");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -98,8 +106,10 @@ namespace DotNet
             {
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
-                Console.WriteLine("Fatal Error: could not build");
-                Environment.Exit(1);
+                Console.WriteLine("Fatal Error: could not demolish");
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -116,7 +126,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not maintain");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -133,7 +145,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not buy upgrade");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -150,7 +164,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not adjust energy");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -168,7 +184,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not wait");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -177,15 +195,24 @@ namespace DotNet
         public async Task<ScoreResponse> GetScore(string gameId)
         {
             //Client.DefaultRequestHeaders.Add("x-api-key", apiKey);
-            var response = await _client.GetAsync("score?GameId?" + gameId);
+            var response = await _client.GetAsync("score?GameId=" + gameId);
 
             var result = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ScoreResponse>(result);
         }
 
+        public async Task<GameReplayResponse> GetReplay(string gameId)
+        {
+            var response = await _client.GetAsync("replay?GameId=" + gameId);
+            response.EnsureSuccessStatusCode();
+    
+            var result = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<GameReplayResponse>(result);
+        }
+
         public async Task<GameState> GetGameInfo(string gameId)
         {
-            var response = await _client.GetAsync("gameInfo?GameId?" + gameId);
+            var response = await _client.GetAsync("gameInfo?GameId=" + gameId);
 
             var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
@@ -193,7 +220,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not get game info");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameState>(result);
@@ -201,7 +230,7 @@ namespace DotNet
 
         public async Task<GameStateResponse> GetGameState(string gameId)
         {
-            var response = await _client.GetAsync("gameState?GameId?" + gameId);
+            var response = await _client.GetAsync("gameState?GameId=" + gameId);
 
             var result = await response.Content.ReadAsStringAsync();
             if (response.StatusCode != HttpStatusCode.OK)
@@ -209,7 +238,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not get game state");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<GameStateResponse>(result);
@@ -225,7 +256,9 @@ namespace DotNet
                 Console.WriteLine("Exception:" + result);
                 Console.WriteLine(response.Content);
                 Console.WriteLine("Fatal Error: could not get games");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
 
             return JsonConvert.DeserializeObject<List<GamesResponse>>(result);
@@ -233,7 +266,7 @@ namespace DotNet
 
         public async Task EndGame(string gameId = null)
         {
-            var response = await _client.GetAsync("end?GameId?" + gameId);
+            var response = await _client.GetAsync("end?GameId=" + gameId);
             Console.WriteLine(await response.Content.ReadAsStringAsync());
 
 
@@ -241,7 +274,9 @@ namespace DotNet
             {
                 Console.WriteLine(await response.Content.ReadAsStringAsync());
                 Console.WriteLine("Fatal Error: could not end game");
-                Environment.Exit(1);
+
+                response.EnsureSuccessStatusCode();
+                //Environment.Exit(1);
             }
         }
     }
